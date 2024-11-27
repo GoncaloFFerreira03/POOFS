@@ -16,6 +16,24 @@ public class POOFS {
 
         // Processar o conteúdo do ficheiro
         lerFicheiroTexto(ficheiro, clientes, faturas, produtos);
+        /*for (Produto produto : produtos) {
+            if (produto instanceof Alimentar) {
+                Alimentar alimentar = (Alimentar) produto;
+                System.out.println("Código: " + alimentar.getCodigo());
+                System.out.println("Nome: " + alimentar.getNome());
+                System.out.println("Descrição: " + alimentar.getDescricao());
+                System.out.println("Preço sem IVA: " + alimentar.getPrecoSemIva());
+                System.out.println("Quantidade: " + alimentar.getQuantidade());
+                System.out.println("Biológico: " + (alimentar.isBiologico() ? "Sim" : "Não"));
+                System.out.println("Certificados ou Categorias: ");
+
+                for (String certOuCat : alimentar.getCertOuCat()) {
+                    System.out.println("  - " + certOuCat);
+                }
+                System.out.println(); // Linha em branco para separar os produtos
+            }
+        }*/
+
         menuSistema(clientes);
     }
     private static void menuSistema(ArrayList<Cliente> clientes) {
@@ -98,9 +116,13 @@ public class POOFS {
                     // Criar um produto farmacêutico ou alimentar
                     Produto produto;
                     if (parts[0].equals("ProdutoF")) {
-                        produto = new Farmacia(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), Boolean.parseBoolean(parts[6]));
+                        produto = new Farmacia(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), parts[6]);
                     } else {
-                        produto = new Alimentar(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), Boolean.parseBoolean(parts[6]));
+                        ArrayList<String> certOuCat =new ArrayList<>();
+                        for(int i=7;i< parts.length; i++){
+                            certOuCat.add(parts[i]);
+                        }
+                        produto = new Alimentar(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), Boolean.parseBoolean(parts[6]),certOuCat);
                     }
                     produtos.add(produto);
                     break;

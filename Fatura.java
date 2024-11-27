@@ -43,4 +43,14 @@ public class Fatura {
     public void setProdutos(ArrayList<Produto> produtos) {
         this.produtos = produtos;
     }
+
+
+    public int calcularTaxaImpostoTotal(){
+        int taxaTotal=0;
+        for (Produto produto : produtos) {
+            taxaTotal += produto.calcularTaxa(local);
+        }
+        return taxaTotal;
+    }
+
 }
