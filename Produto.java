@@ -12,5 +12,43 @@ public class Produto {
         this.precoSemIVA = precoSemIva;
     }
 
+    public String getCodigo() {
+        return codigo;
+    }
 
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public double getPrecoSemIVA() {
+        return precoSemIVA;
+    }
+
+    public void setPrecoSemIVA(double precoSemIVA) {
+        this.precoSemIVA = precoSemIVA;
+    }
 }

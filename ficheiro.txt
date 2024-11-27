@@ -1,11 +1,11 @@
-Cliente:João Silva|123456789|Lisboa
-Cliente:Maria Costa|987654321|Porto
-Cliente:Pedro Sousa|192837465|Faro
-Fatura:001|123456789|2024-11-01|P001
-Fatura:002|123456789|2024-11-15|P002
-Fatura:003|987654321|2024-11-20|P003
-Fatura:004|192837465|2024-11-25|P004
-ProdutoF:P001|Paracetamol|Medicamento para febre e dor|50|2.5|true
-ProdutoF:P002|Ibuprofeno|Anti-inflamatório|30|3.0|false
-ProdutoA:P003|Maçã|Fruta fresca|100|0.5|true
-ProdutoA:P004|Pão|Alimento básico|200|1.0|false
+Cliente|João Silva|123456789|Lisboa
+Cliente|Maria Costa|987654321|Porto
+Cliente|Pedro Sousa|192837465|Faro
+ProdutoF|P001|Paracetamol|Medicamento para febre e dor|50|2.5|true
+ProdutoF|P002|Ibuprofeno|Anti-inflamatório|30|3.0|false
+ProdutoA|P003|Maçã|Fruta fresca|100|0.5|true
+ProdutoA|P004|Pão|Alimento básico|200|1.0|false
+Fatura|001|123456789|2024-11-01|P001
+Fatura|002|123456789|2024-11-15|P002
+Fatura|003|987654321|2024-11-20|P003
+Fatura|004|192837465|2024-11-25|P004

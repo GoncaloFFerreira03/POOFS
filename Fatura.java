@@ -12,6 +12,35 @@ public class Fatura {
         this.produtos = produtos;
     }
 
+    public String getNumeroFatura() {
+        return numeroFatura;
+    }
 
+    public void setNumeroFatura(String numeroFatura) {
+        this.numeroFatura = numeroFatura;
+    }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public ArrayList<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(ArrayList<Produto> produtos) {
+        this.produtos = produtos;
+    }
 }
