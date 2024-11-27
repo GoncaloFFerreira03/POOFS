@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class POOFS {
     public static void main(String[] args) {
@@ -15,46 +16,72 @@ public class POOFS {
 
         // Processar o conteúdo do ficheiro
         lerFicheiroTexto(ficheiro, clientes, faturas, produtos);
-
-        // Mostrar os dados processados
-        System.out.println("Clientes:");
-        for (Cliente cliente : clientes) {
-            System.out.println("Nome: " + cliente.getName() +
-                    ", Contribuinte: " + cliente.getContribuinte() +
-                    ", Localização: " + cliente.getLocalizacao());
-        }
-
-        System.out.println("\nFaturas:");
-        for (Fatura fatura : faturas) {
-            System.out.println("Número: " + fatura.getNumeroFatura() +
-                    ", Cliente: " + fatura.getCliente().getName() +
-                    ", Data: " + fatura.getData() +
-                    ", Produtos: " + fatura.getProdutos()); // Presume que getProdutos() retorna uma lista legível
-        }
-
-        System.out.println("\nProdutos:");
-        for (Produto produto : produtos) {
-            if (produto instanceof Farmacia) {
-                Farmacia farmacia = (Farmacia) produto;
-                System.out.println("Tipo: Farmácia, Código: " + farmacia.getCodigo() +
-                        ", Nome: " + farmacia.getNome() +
-                        ", Descrição: " + farmacia.getDescricao() +
-                        ", Quantidade: " + farmacia.getQuantidade() +
-                        ", Preço: " + farmacia.getPrecoSemIVA() +
-                        ", Prescrição Obrigatória: " + farmacia.isPrescricao());
-            } else if (produto instanceof Alimentar) {
-                Alimentar alimentar = (Alimentar) produto;
-                System.out.println("Tipo: Alimentar, Código: " + alimentar.getCodigo() +
-                        ", Nome: " + alimentar.getNome() +
-                        ", Descrição: " + alimentar.getDescricao() +
-                        ", Quantidade: " + alimentar.getQuantidade() +
-                        ", Preço: " + alimentar.getPrecoSemIVA() +
-                        ", Biológico: " + alimentar.isBiologico());
-            }
-        }
-
+        menuSistema();
     }
+    private static void menuSistema() {
+        Scanner scanner = new Scanner(System.in);
+        boolean continuar = true;
+        while (continuar) {
+            System.out.println("=== MENU PRINCIPAL ===");
+            System.out.println("1. Criar ou Editar Cliente");
+            System.out.println("2. Listar Clientes");
+            System.out.println("3. Criar ou Editar Faturas");
+            System.out.println("4. Listar Faturas");
+            System.out.println("5. Visualizar Fatura");
+            System.out.println("6. Importar Faturas");
+            System.out.println("7. Exportar Faturas");
+            System.out.println("8. Estatísticas");
+            System.out.println("9. Sair");
+            System.out.print("Escolha uma opção: ");
 
+            int opcao = scanner.nextInt();
+            scanner.nextLine(); // Consome a quebra de linha após o número
+
+            switch (opcao) {
+                case 1:
+                    System.out.println("Opção escolhida: Criar ou Editar Cliente");
+                    // Implementar método para criar ou editar cliente
+                    break;
+                case 2:
+                    System.out.println("Opção escolhida: Listar Clientes");
+                    // Implementar método para listar clientes
+                    break;
+                case 3:
+                    System.out.println("Opção escolhida: Criar ou Editar Faturas");
+                    // Implementar método para criar ou editar faturas
+                    break;
+                case 4:
+                    System.out.println("Opção escolhida: Listar Faturas");
+                    // Implementar método para listar faturas
+                    break;
+                case 5:
+                    System.out.println("Opção escolhida: Visualizar Fatura");
+                    // Implementar método para visualizar uma fatura
+                    break;
+                case 6:
+                    System.out.println("Opção escolhida: Importar Faturas");
+                    // Implementar método para importar faturas de ficheiro
+                    break;
+                case 7:
+                    System.out.println("Opção escolhida: Exportar Faturas");
+                    // Implementar método para exportar faturas para ficheiro
+                    break;
+                case 8:
+                    System.out.println("Opção escolhida: Estatísticas");
+                    // Implementar método para mostrar estatísticas
+                    break;
+                case 9:
+                    System.out.println("Saindo do programa...");
+                    continuar = false;
+                    break;
+                default:
+                    System.out.println("Opção inválida! Por favor, escolha uma opção válida.");
+            }
+            System.out.println(); // Espaço entre menus
+        }
+
+        scanner.close();
+    }
     public static void lerFicheiroTexto(Ficheiro ficheiro, ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
         // Processar as linhas lidas
         for (String linha : ficheiro.linhas) {
