@@ -16,22 +16,24 @@ public class POOFS {
 
         // Processar o conteúdo do ficheiro
         lerFicheiroTexto(ficheiro, clientes, faturas, produtos);
-        menuSistema();
+        menuSistema(clientes);
     }
-    private static void menuSistema() {
+    private static void menuSistema(ArrayList<Cliente> clientes) {
         Scanner scanner = new Scanner(System.in);
         boolean continuar = true;
         while (continuar) {
             System.out.println("=== MENU PRINCIPAL ===");
-            System.out.println("1. Criar ou Editar Cliente");
-            System.out.println("2. Listar Clientes");
-            System.out.println("3. Criar ou Editar Faturas");
-            System.out.println("4. Listar Faturas");
-            System.out.println("5. Visualizar Fatura");
-            System.out.println("6. Importar Faturas");
-            System.out.println("7. Exportar Faturas");
-            System.out.println("8. Estatísticas");
-            System.out.println("9. Sair");
+            System.out.println("1. Criar Cliente");
+            System.out.println("2. Editar Cliente");
+            System.out.println("3. Listar Clientes");
+            System.out.println("4. Criar Faturas");
+            System.out.println("5. Editar Faturas");
+            System.out.println("6. Listar Faturas");
+            System.out.println("7. Visualizar Fatura");
+            System.out.println("8. Importar Faturas");
+            System.out.println("9. Exportar Faturas");
+            System.out.println("10. Estatísticas");
+            System.out.println("11. Sair");
             System.out.print("Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
@@ -39,12 +41,10 @@ public class POOFS {
 
             switch (opcao) {
                 case 1:
-                    System.out.println("Opção escolhida: Criar ou Editar Cliente");
-                    // Implementar método para criar ou editar cliente
+                    registar(clientes );
                     break;
                 case 2:
-                    System.out.println("Opção escolhida: Listar Clientes");
-                    // Implementar método para listar clientes
+                    editar( clientes);
                     break;
                 case 3:
                     System.out.println("Opção escolhida: Criar ou Editar Faturas");
@@ -131,4 +131,76 @@ public class POOFS {
             }
         }
     }
+    public static void registar( ArrayList<Cliente> clientes) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduza o seu nome: ");
+        String nome = scanner.nextLine();
+        System.out.println("Introduza o seu contribuinte: ");
+        String contribuinte = scanner.nextLine();
+        String localizacao;
+        while (true) {
+            System.out.println("Introduza a sua localização (Acores, Madeira ou Continente): ");
+            localizacao = scanner.nextLine();
+
+            if (localizacao.equals("Acores") || localizacao.equals("Madeira") || localizacao.equals("Continente")) {
+                break;
+            }
+            System.out.println("Localização inválida! Por favor, insira 'Açores', 'Madeira', ou 'Continente'.");
+        }
+        Cliente cliente = new Cliente(nome,contribuinte,localizacao);
+        clientes.add(cliente);
+        for(Cliente c:clientes)
+        {
+            System.out.println("Nome: " + c.getName() + ", Contribuinte: " + c.getContribuinte() + ", Localização: " + c.getLocalizacao());
+        }
+    }
+    public static void editar( ArrayList<Cliente> clientes) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduza o seu nome: ");
+        String nome = scanner.nextLine();
+        System.out.println("Introduza o seu contribuinte: ");
+        String contribuinte = scanner.nextLine();
+        System.out.println("Introduza a sua localização (Acores, Madeira ou Continente): ");
+        String localizacao = scanner.nextLine();
+        for (Cliente c : clientes) {
+            if (c.getName().equals(nome) && c.getContribuinte().equals(contribuinte) && c.getLocalizacao().equals(localizacao)) {
+                System.out.println("======== Editar Dados =======");
+                System.out.println("= 1. Nome de Cliente        =");
+                System.out.println("= 2. Contribuinte de Cliente=");
+                System.out.println("= 3. Localizacao de Cliente =");
+                System.out.println("= 4. === MENU PRINCIPAL === =");
+                System.out.println("=============================");
+                System.out.print("Escolha uma opção: ");
+                int opcao = scanner.nextInt();
+                scanner.nextLine();
+                switch (opcao) {
+                    case 1:
+                        System.out.println("Introduza o seu novo nome: ");
+                        String novoNome = scanner.nextLine();
+                        c.setName(novoNome);
+                        break;
+                    case 2:
+                        System.out.println("Introduza o seu novo Contribuinte: ");
+                        String novoContribuinte = scanner.nextLine();
+                        c.setName(novoContribuinte);
+                        break;
+                    case 3:
+                        System.out.println("Introduza a sua nova Localizacao: ");
+                        String novaLoc = scanner.nextLine();
+                        c.setName(novaLoc);
+                        break;
+                    case 4:
+                        menuSistema(clientes);
+                        break;
+
+                }
+            }
+        }
+        for(Cliente c:clientes)
+        {
+            System.out.println("Nome: " + c.getName() + ", Contribuinte: " + c.getContribuinte() + ", Localização: " + c.getLocalizacao());
+        }
+    }
 }
+
+
