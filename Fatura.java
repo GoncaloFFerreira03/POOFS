@@ -52,5 +52,12 @@ public class Fatura {
         }
         return taxaTotal;
     }
+    public double calcularPrecoSemIva(){
+        double precoTotal=0;
+        for (Produto produto : produtos) {
+            precoTotal+= produto.calcularPrecoTotalSemIva();
+        }
+        return precoTotal;
+    }
 
 }

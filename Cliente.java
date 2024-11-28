@@ -1,20 +1,20 @@
 public class Cliente {
-    private String name;
+    private String nome;
     private String contribuinte;
     private String localizacao;
 
-    public Cliente(String name, String contribuinte, String localizacao) {
-        this.name = name;
+    public Cliente(String nome, String contribuinte, String localizacao) {
+        this.nome = nome;
         this.contribuinte = contribuinte;
         this.localizacao = localizacao;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getContribuinte() {

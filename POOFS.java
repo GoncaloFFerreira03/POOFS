@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class POOFS {
     public static void main(String[] args) {
         // Nome do arquivo que contém os dados
-        String nomeFicheiro = "ficheiro.txt";
+        String nomeFicheiro = "src/ficheiro.txt";
 
         // Ler o arquivo
         Ficheiro ficheiro = new Ficheiro(nomeFicheiro);
@@ -34,9 +34,9 @@ public class POOFS {
             }
         }*/
 
-        menuSistema(clientes);
+        menuSistema(clientes, faturas, produtos);
     }
-    private static void menuSistema(ArrayList<Cliente> clientes) {
+    private static void menuSistema( ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
         Scanner scanner = new Scanner(System.in);
         boolean continuar = true;
         while (continuar) {
@@ -59,36 +59,44 @@ public class POOFS {
 
             switch (opcao) {
                 case 1:
-                    registar(clientes );
+                    registar(clientes);
                     break;
                 case 2:
-                    editar( clientes);
+                    editar(clientes, faturas, produtos);
                     break;
-                case 3:
+                case 3://Listar Clientes
                     System.out.println("Opção escolhida: Criar ou Editar Faturas");
                     // Implementar método para criar ou editar faturas
                     break;
-                case 4:
-                    System.out.println("Opção escolhida: Listar Faturas");
+                case 4://Criar faturas
+                    criarFaturas( clientes, faturas, produtos);
                     // Implementar método para listar faturas
                     break;
-                case 5:
-                    System.out.println("Opção escolhida: Visualizar Fatura");
+                case 5://Editar faturas
+                    editarFatura( clientes, faturas, produtos);
                     // Implementar método para visualizar uma fatura
                     break;
-                case 6:
+                case 6://Listar faturas
                     System.out.println("Opção escolhida: Importar Faturas");
                     // Implementar método para importar faturas de ficheiro
                     break;
-                case 7:
+                case 7://Visualizar faturas
                     System.out.println("Opção escolhida: Exportar Faturas");
                     // Implementar método para exportar faturas para ficheiro
                     break;
-                case 8:
+                case 8://Importar Faturas
                     System.out.println("Opção escolhida: Estatísticas");
                     // Implementar método para mostrar estatísticas
                     break;
-                case 9:
+                case 9://Exportar Faturas
+                    System.out.println("Opção escolhida: Estatísticas");
+                    // Implementar método para mostrar estatísticas
+                    break;
+                case 10://Estatisticas
+                    System.out.println("Opção escolhida: Estatísticas");
+                    // Implementar método para mostrar estatísticas
+                    break;
+                case 11://Sair
                     System.out.println("Saindo do programa...");
                     continuar = false;
                     break;
@@ -153,7 +161,7 @@ public class POOFS {
             }
         }
     }
-    public static void registar( ArrayList<Cliente> clientes) {
+    public static Cliente registar( ArrayList<Cliente> clientes) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduza o seu nome: ");
         String nome = scanner.nextLine();
@@ -173,10 +181,11 @@ public class POOFS {
         clientes.add(cliente);
         for(Cliente c:clientes)
         {
-            System.out.println("Nome: " + c.getName() + ", Contribuinte: " + c.getContribuinte() + ", Localização: " + c.getLocalizacao());
+            System.out.println("Nome: " + c.getNome() + ", Contribuinte: " + c.getContribuinte() + ", Localização: " + c.getLocalizacao());
         }
+        return cliente;
     }
-    public static void editar( ArrayList<Cliente> clientes) {
+    public static void editar( ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduza o seu nome: ");
         String nome = scanner.nextLine();
@@ -185,12 +194,12 @@ public class POOFS {
         System.out.println("Introduza a sua localização (Acores, Madeira ou Continente): ");
         String localizacao = scanner.nextLine();
         for (Cliente c : clientes) {
-            if (c.getName().equals(nome) && c.getContribuinte().equals(contribuinte) && c.getLocalizacao().equals(localizacao)) {
+            if (c.getNome().equals(nome) && c.getContribuinte().equals(contribuinte) && c.getLocalizacao().equals(localizacao)) {
                 System.out.println("======== Editar Dados =======");
-                System.out.println("= 1. Nome de Cliente        =");
-                System.out.println("= 2. Contribuinte de Cliente=");
-                System.out.println("= 3. Localizacao de Cliente =");
-                System.out.println("= 4. === MENU PRINCIPAL === =");
+                System.out.println("= 1. Nome de Cliente        = ");
+                System.out.println("= 2. Contribuinte de Cliente= ");
+                System.out.println("= 3. Localizacao de Cliente = ");
+                System.out.println("= 4. === MENU PRINCIPAL === = ");
                 System.out.println("=============================");
                 System.out.print("Escolha uma opção: ");
                 int opcao = scanner.nextInt();
@@ -199,20 +208,20 @@ public class POOFS {
                     case 1:
                         System.out.println("Introduza o seu novo nome: ");
                         String novoNome = scanner.nextLine();
-                        c.setName(novoNome);
+                        c.setNome(novoNome);
                         break;
                     case 2:
                         System.out.println("Introduza o seu novo Contribuinte: ");
                         String novoContribuinte = scanner.nextLine();
-                        c.setName(novoContribuinte);
+                        c.setNome(novoContribuinte);
                         break;
                     case 3:
                         System.out.println("Introduza a sua nova Localizacao: ");
                         String novaLoc = scanner.nextLine();
-                        c.setName(novaLoc);
+                        c.setNome(novaLoc);
                         break;
                     case 4:
-                        menuSistema(clientes);
+                        menuSistema(clientes, faturas, produtos);
                         break;
 
                 }
@@ -220,7 +229,180 @@ public class POOFS {
         }
         for(Cliente c:clientes)
         {
-            System.out.println("Nome: " + c.getName() + ", Contribuinte: " + c.getContribuinte() + ", Localização: " + c.getLocalizacao());
+            System.out.println("Nome: " + c.getNome() + ", Contribuinte: " + c.getContribuinte() + ", Localização: " + c.getLocalizacao());
+        }
+    }
+
+    public static void criarFaturas(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Escolha do cliente
+        System.out.println("A que pessoa está associado?");
+        for (int i = 0; i < clientes.size(); i++) {
+            System.out.println((i + 1) + " -> " + clientes.get(i).getNome());
+        }
+
+        int clienteIndex = -1;
+        while (clienteIndex < 0 || clienteIndex >= clientes.size()) {
+            System.out.print("Escolha o número correspondente ao cliente: ");
+            clienteIndex = scanner.nextInt() - 1; // Converte de 1-based para 0-based
+            if (clienteIndex < 0 || clienteIndex >= clientes.size()) {
+                System.out.println("Opção inválida. Tente novamente.");
+            }
+        }
+        Cliente clienteEscolhido = clientes.get(clienteIndex);
+
+        // Adicionar produtos à fatura
+        ArrayList<Produto> produtosEscolhidos = new ArrayList<>();
+        boolean adicionarMaisProdutos = true;
+        while (adicionarMaisProdutos) {
+            System.out.println("Escolha os produtos a adicionar:");
+            for (int i = 0; i < produtos.size(); i++) {
+                System.out.println((i + 1) + " -> " + produtos.get(i).getNome()); // Assumindo que Produto tem o método getNome()
+            }
+
+            int produtoIndex = -1;
+            while (produtoIndex < 0 || produtoIndex >= produtos.size()) {
+                System.out.print("Escolha o número correspondente ao produto: ");
+                produtoIndex = scanner.nextInt() - 1; // Converte de 1-based para 0-based
+                if (produtoIndex < 0 || produtoIndex >= produtos.size()) {
+                    System.out.println("Opção inválida. Tente novamente.");
+                }
+            }
+            produtosEscolhidos.add(produtos.get(produtoIndex));
+
+            // Perguntar se deseja adicionar mais produtos
+            System.out.print("Deseja adicionar mais produtos? (s/n): ");
+            String resposta = scanner.next();
+            adicionarMaisProdutos = resposta.equalsIgnoreCase("s");
+        }
+
+        // Criar a fatura
+        System.out.print("Insira o número da fatura: ");
+        String numeroFatura = scanner.next();
+
+        System.out.print("Insira a data da fatura (yyyy-MM-dd): ");
+        String dataFatura = scanner.next();
+
+        // Instancia a nova fatura e adiciona à lista de faturas
+        Fatura novaFatura = new Fatura(numeroFatura, clienteEscolhido, dataFatura, produtosEscolhidos);
+        faturas.add(novaFatura);
+
+        System.out.println("Fatura criada com sucesso!");
+        System.out.println("Número da Fatura: " + numeroFatura);
+        System.out.println("Cliente: " + clienteEscolhido.getNome());
+        System.out.println("Data: " + dataFatura);
+        System.out.println("Produtos na fatura:");
+        for (Produto produto : produtosEscolhidos) {
+            System.out.println("- " + produto.getNome()); // Assumindo que Produto tem o método getNome()
+        }
+    }
+    public static void editarFatura(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Exibir as faturas existentes
+        System.out.println("Selecione a fatura que deseja editar:");
+        for (int i = 0; i < faturas.size(); i++) {
+            System.out.println((i + 1) + " -> Fatura Nº: " + faturas.get(i).getNumeroFatura() + " | Cliente: "
+                    + faturas.get(i).getCliente().getNome() + " | Data: " + faturas.get(i).getData());
+        }
+
+        // Escolher uma fatura para editar
+        int faturaIndex = -1;
+        while (faturaIndex < 0 || faturaIndex >= faturas.size()) {
+            System.out.print("Escolha o número correspondente à fatura: ");
+            faturaIndex = scanner.nextInt() - 1; // Converte de 1-based para 0-based
+            if (faturaIndex < 0 || faturaIndex >= faturas.size()) {
+                System.out.println("Opção inválida. Tente novamente.");
+            }
+        }
+        Fatura faturaEscolhida = faturas.get(faturaIndex);
+
+        // Alterar o cliente
+        System.out.println("Cliente atual: " + faturaEscolhida.getCliente().getNome());
+        System.out.println("Deseja alterar o cliente? (s/n): ");
+        String alterarCliente = scanner.next();
+        if (alterarCliente.equalsIgnoreCase("s")) {
+            System.out.println("Escolha o novo cliente ou crie um novo:");
+            for (int i = 0; i < clientes.size(); i++) {
+                System.out.println((i + 1) + " -> " + clientes.get(i).getNome());
+            }
+            System.out.println("0 -> Criar novo cliente");
+
+            int clienteIndex = -1;
+            while (clienteIndex < 0 || clienteIndex > clientes.size()) {
+                System.out.print("Escolha o número correspondente ao cliente: ");
+                clienteIndex = scanner.nextInt() - 1; // Converte de 1-based para 0-based
+                System.out.println("O NUMERO QUE ESCOLHI "+ clienteIndex+"\n");
+                if (clienteIndex >= -1 || clienteIndex <= clientes.size()) {
+                    break;
+                }else
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+
+            if (clienteIndex == -1) { // Opção para criar um novo cliente
+                System.out.println("VOU CRIAR UM NOVO\n");
+                Cliente novoCliente = registar(clientes);
+                faturaEscolhida.setCliente(novoCliente);
+            } else {
+                faturaEscolhida.setCliente(clientes.get(clienteIndex));
+            }
+        }
+
+        // Alterar a data
+        System.out.println("Data atual: " + faturaEscolhida.getData());
+        System.out.println("Deseja alterar a data? (s/n): ");
+        String alterarData = scanner.next();
+        if (alterarData.equalsIgnoreCase("s")) {
+            System.out.print("Insira a nova data (yyyy-MM-dd): ");
+            String novaData = scanner.next();
+            faturaEscolhida.setData(novaData);
+        }
+
+        // Alterar os produtos
+        System.out.println("Produtos atuais na fatura:");
+        for (Produto produto : faturaEscolhida.getProdutos()) {
+            System.out.println("- " + produto.getNome());
+        }
+        System.out.println("Deseja alterar os produtos? (s/n): ");
+        String alterarProdutos = scanner.next();
+        if (alterarProdutos.equalsIgnoreCase("s")) {
+            ArrayList<Produto> novosProdutos = new ArrayList<>();
+            boolean adicionarMaisProdutos = true;
+
+            while (adicionarMaisProdutos) {
+                System.out.println("Escolha os produtos a adicionar:");
+                for (int i = 0; i < produtos.size(); i++) {
+                    System.out.println((i + 1) + " -> " + produtos.get(i).getNome());
+                }
+
+                int produtoIndex = -1;
+                while (produtoIndex < 0 || produtoIndex >= produtos.size()) {
+                    System.out.print("Escolha o número correspondente ao produto: ");
+                    produtoIndex = scanner.nextInt() - 1;
+                    if (produtoIndex < 0 || produtoIndex >= produtos.size()) {
+                        System.out.println("Opção inválida. Tente novamente.");
+                    }
+                }
+                novosProdutos.add(produtos.get(produtoIndex));
+
+                // Perguntar se deseja adicionar mais produtos
+                System.out.print("Deseja adicionar mais produtos? (s/n): ");
+                String resposta = scanner.next();
+                adicionarMaisProdutos = resposta.equalsIgnoreCase("s");
+            }
+
+            faturaEscolhida.setProdutos(novosProdutos);
+        }
+
+        // Exibir resumo da edição
+        System.out.println("Fatura editada com sucesso!");
+        System.out.println("Número da Fatura: " + faturaEscolhida.getNumeroFatura());
+        System.out.println("Cliente: " + faturaEscolhida.getCliente().getNome());
+        System.out.println("Data: " + faturaEscolhida.getData());
+        System.out.println("Produtos na fatura:");
+        for (Produto produto : faturaEscolhida.getProdutos()) {
+            System.out.println("- " + produto.getNome());
         }
     }
 }

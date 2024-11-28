@@ -57,4 +57,10 @@ abstract class Produto {
     }
 
     public abstract int calcularTaxa(String local);
+
+    public double calcularPrecoTotalSemIva(){
+        double precoTotal = 0;
+        precoTotal = precoSemIVA*quantidade;
+        return precoTotal;
+    }
 }
