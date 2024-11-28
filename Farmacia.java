@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Farmacia extends Produto {
     private boolean prescricao;
     private String medOuCat;
@@ -5,7 +9,7 @@ public class Farmacia extends Produto {
     public Farmacia(String codigo, String nome, String descricao, double precoSemIva, int quantidade, String medOuCat) {
         super(codigo, nome, descricao, precoSemIva, quantidade);
         this.prescricao = prescricao;
-        this.medOucat = medOuCat;
+        this.medOuCat = medOuCat;
     }
 
     public boolean getPrescricao() {
@@ -13,11 +17,11 @@ public class Farmacia extends Produto {
     }
 
     public String getMedOuCat() {
-        return medOucat;
+        return medOuCat;
     }
 
     private void setPrescricao() {
-        String[] categorias = {"beleza", "bem-estar", "bebés", "animais", "outro"};
+        String[] palavras = {"beleza", "bem-estar", "bebés", "animais", "outro"};
         for (String palavra : palavras) {
             if (medOuCat.toLowerCase().equals(palavra.toLowerCase())) {
                 this.prescricao = true;
@@ -35,25 +39,26 @@ public class Farmacia extends Produto {
                 return taxaExtra;
             }
         }
+        return taxaExtra;
     }
 
-    public int calcularTaxa(local){
+    public int calcularTaxa(String local){
         int taxaTotal = 0;
         if(local.equals("Portugal Continental"))   {
-            if(pescricao)
-                taxaTotal = 6:
+            if(prescricao)
+                taxaTotal = 6;
             else
                 taxaTotal = 23;
         }
         else if(local.equals("Madeira")){
-            if(pescricao)
-                taxaTotal = 5:
+            if(prescricao)
+                taxaTotal = 5;
             else
                 taxaTotal = 23;
         }
         else if(local.equals("Acores")){
-            if(pescricao)
-                taxaTotal = 4:
+            if(prescricao)
+                taxaTotal = 4;
             else
                 taxaTotal = 23;
         }

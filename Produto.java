@@ -1,4 +1,6 @@
-public class Produto {
+import java.util.ArrayList;
+
+abstract class Produto {
     private String codigo;
     private int quantidade;
     private String nome;
@@ -54,7 +56,5 @@ public class Produto {
         this.precoSemIVA = precoSemIVA;
     }
 
-
-    @Override//implementar esta função em cada um dos tipo de produtos para saber o total
-    public int calcularTaxa(local);
+    public abstract int calcularTaxa(String local);
 }

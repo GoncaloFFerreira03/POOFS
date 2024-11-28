@@ -22,7 +22,7 @@ public class POOFS {
                 System.out.println("Código: " + alimentar.getCodigo());
                 System.out.println("Nome: " + alimentar.getNome());
                 System.out.println("Descrição: " + alimentar.getDescricao());
-                System.out.println("Preço sem IVA: " + alimentar.getPrecoSemIva());
+                System.out.println("Preço sem IVA: " + alimentar.getPrecoSemIVA());
                 System.out.println("Quantidade: " + alimentar.getQuantidade());
                 System.out.println("Biológico: " + (alimentar.isBiologico() ? "Sim" : "Não"));
                 System.out.println("Certificados ou Categorias: ");
@@ -161,13 +161,13 @@ public class POOFS {
         String contribuinte = scanner.nextLine();
         String localizacao;
         while (true) {
-            System.out.println("Introduza a sua localização (Acores, Madeira ou Continente): ");
+            System.out.println("Introduza a sua localização (Acores, Madeira ou Portugal Continental): ");
             localizacao = scanner.nextLine();
 
-            if (localizacao.equals("Acores") || localizacao.equals("Madeira") || localizacao.equals("Continente")) {
+            if (localizacao.equals("Acores") || localizacao.equals("Madeira") || localizacao.equals("Portugal Continental")) {
                 break;
             }
-            System.out.println("Localização inválida! Por favor, insira 'Açores', 'Madeira', ou 'Continente'.");
+            System.out.println("Localização inválida! Por favor, insira 'Açores', 'Madeira', ou 'Portugal Continental'.");
         }
         Cliente cliente = new Cliente(nome,contribuinte,localizacao);
         clientes.add(cliente);

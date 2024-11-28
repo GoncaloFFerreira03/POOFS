@@ -48,7 +48,7 @@ public class Fatura {
     public int calcularTaxaImpostoTotal(){
         int taxaTotal=0;
         for (Produto produto : produtos) {
-            taxaTotal += produto.calcularTaxa(local);
+            taxaTotal += produto.calcularTaxa(cliente.getLocalizacao());
         }
         return taxaTotal;
     }
