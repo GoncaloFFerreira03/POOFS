@@ -8,6 +8,8 @@ public class POOFS {
 
         // Ler o arquivo
         Ficheiro ficheiro = new Ficheiro(nomeFicheiro);
+        Ficheiro ficheiro2 = new Ficheiro(nomeFicheiro);
+
 
         // Listas para armazenar os objetos criados
         ArrayList<Cliente> clientes = new ArrayList<>();
@@ -65,7 +67,7 @@ public class POOFS {
                     editar(clientes, faturas, produtos);
                     break;
                 case 3://Listar Clientes
-                    System.out.println("Opção escolhida: Criar ou Editar Faturas");
+                    listarClientes(clientes);
                     // Implementar método para criar ou editar faturas
                     break;
                 case 4://Criar faturas
@@ -77,10 +79,11 @@ public class POOFS {
                     // Implementar método para visualizar uma fatura
                     break;
                 case 6://Listar faturas
-                    System.out.println("Opção escolhida: Importar Faturas");
+                    //listarFaturas(clientes,faturas,produtos);
                     // Implementar método para importar faturas de ficheiro
                     break;
                 case 7://Visualizar faturas
+                    visualizarFatura(clientes,faturas,produtos);
                     System.out.println("Opção escolhida: Exportar Faturas");
                     // Implementar método para exportar faturas para ficheiro
                     break;
@@ -117,6 +120,7 @@ public class POOFS {
                 case "Cliente":
                     // Criar um cliente
                     clientes.add(new Cliente(parts[1], parts[2], parts[3]));
+                    //FicheiroO.salvarObjetos("FicheiroObj", parts[1], parts[2], parts[3]);
                     break;
 
                 case "ProdutoF":
@@ -233,6 +237,53 @@ public class POOFS {
         }
     }
 
+    public static void listarClientes( ArrayList<Cliente> clientes) {
+        for (Cliente c : clientes) {
+            System.out.println(c.getNome() + ", " + c.getContribuinte() + ", " + c.getLocalizacao());
+
+        }
+    }
+
+    public static void listarFaturas( ArrayList<Cliente> clientes,ArrayList<Fatura> faturas,ArrayList<Produto> produtos) {
+        for (Fatura fatura : faturas) {
+            Cliente cliente = fatura.getCliente();
+
+
+            // Obtém a lista de produtos da fatura
+            ArrayList<Produto> produtosFatura = fatura.getProdutos();
+
+
+
+            // Exibe as informações da fatura
+            System.out.printf("Fatura Número: %s, "
+                            + "Cliente: %s, "
+                            + "Localização: %s, "
+                            + "Número de Produtos: %d, "
+                            + "Valor Total Sem IVA: %.2f, "
+                            + "Valor Total com IVA: %.2f\n",
+                    fatura.getNumeroFatura(),
+                    cliente.getNome(),
+                    cliente.getLocalizacao(),
+                    produtosFatura.size(),
+                    fatura.calcularPrecoSemIva(),
+                    fatura.calcularTaxaImpostoTotal());
+        }
+    }
+    public static void visualizarFatura( ArrayList<Cliente> clientes,ArrayList<Fatura> faturas,ArrayList<Produto> produtos) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduza o seu nome: ");
+        String nome = scanner.nextLine();
+        System.out.println("Introduza o seu contribuinte: ");
+        String contribuinte = scanner.nextLine();
+        System.out.println("Introduza a sua localização (Acores, Madeira ou Continente): ");
+        String localizacao = scanner.nextLine();
+        for (Cliente c : clientes) {
+            if(nome.equals(c.getNome())){
+
+            }
+
+        }
+    }
     public static void criarFaturas(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
         Scanner scanner = new Scanner(System.in);
 

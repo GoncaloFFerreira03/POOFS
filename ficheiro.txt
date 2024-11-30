@@ -1,4 +1,4 @@
-Cliente|João Silva|123456789|Portugal Continental
+Cliente|João Silva|123456789|Portugal
 Cliente|Maria Costa|987654321|Madeira
 Cliente|Pedro Sousa|192837465|Acores
 ProdutoF|P001|Paracetamol|Medicamento para febre e dor|50|2.5|Rui Oliveira
