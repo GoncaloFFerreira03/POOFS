@@ -57,6 +57,11 @@ abstract class Produto implements Serializable {
         this.precoSemIVA = precoSemIVA;
     }
 
+    public double calcularPrecoComIvaIndividual(String localizacao){
+        double precoProduto = calcularPrecoTotalSemIva() * (1 + (double) calcularTaxa(localizacao)/100);
+        return precoProduto;
+    }
+
     public abstract int calcularTaxa(String local);
 
     public double calcularPrecoTotalSemIva(){

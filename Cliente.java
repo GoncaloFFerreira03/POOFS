@@ -34,4 +34,12 @@ public class Cliente implements Serializable {
     public void setLocalizacao(String localizacao) {
         this.localizacao = localizacao;
     }
+
+    @Override
+    public String toString() {
+        return "Nome:'" + nome + '\'' +
+                ", contribuinte='" + contribuinte + '\'' +
+                ", localizacao='" + localizacao + '\'' +
+                '}';
+    }
 }

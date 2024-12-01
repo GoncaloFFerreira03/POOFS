@@ -44,7 +44,7 @@ public class Farmacia extends Produto {
 
     public int calcularTaxa(String local){
         int taxaTotal = 0;
-        if(local.equals("Portugal Continental"))   {
+        if(local.equals("Portugal"))   {
             if(prescricao)
                 taxaTotal = 6;
             else

@@ -2,22 +2,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Fatura  implements Serializable {
-    private String numeroFatura;
+    private int numeroFatura;
     private Cliente cliente;
     private String data;
     private ArrayList<Produto> produtos;
-    public Fatura(String numeroFatura, Cliente cliente, String data, ArrayList<Produto> produtos) {
+    public Fatura(int numeroFatura, Cliente cliente, String data, ArrayList<Produto> produtos) {
         this.numeroFatura = numeroFatura;
         this.cliente = cliente;
         this.data = data;
         this.produtos = produtos;
     }
 
-    public String getNumeroFatura() {
+    public int getNumeroFatura() {
         return numeroFatura;
     }
 
-    public void setNumeroFatura(String numeroFatura) {
+    public void setNumeroFatura(int numeroFatura) {
         this.numeroFatura = numeroFatura;
     }
 
@@ -61,4 +61,12 @@ public class Fatura  implements Serializable {
         return precoTotal;
     }
 
+    public double calcularPrecoComIva(){//preço com iva de todos os produtos somados
+        double precoTotal=0;
+        for (Produto produto : produtos) {
+            double precoP = produto.calcularPrecoComIvaIndividual(cliente.getLocalizacao());//preço conm iva de cada produto em si
+            precoTotal += precoP;
+        }
+        return precoTotal;
+    }
 }

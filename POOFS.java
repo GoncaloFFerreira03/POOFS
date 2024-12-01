@@ -79,12 +79,11 @@ public class POOFS {
                     // Implementar método para visualizar uma fatura
                     break;
                 case 6://Listar faturas
-                    //listarFaturas(clientes,faturas,produtos);
+                    listarFaturas(clientes,faturas);
                     // Implementar método para importar faturas de ficheiro
                     break;
                 case 7://Visualizar faturas
-                    visualizarFatura(clientes,faturas,produtos);
-                    System.out.println("Opção escolhida: Exportar Faturas");
+                    visualizarFatura(faturas);
                     // Implementar método para exportar faturas para ficheiro
                     break;
                 case 8://Importar Faturas
@@ -155,8 +154,8 @@ public class POOFS {
                             break;
                         }
                     }
-
-                    faturas.add(new Fatura(parts[1], cliente, parts[3], produtoFatura));
+                    int id = Integer.parseInt(parts[1]);
+                    faturas.add(new Fatura(id, cliente, parts[3], produtoFatura));
                     break;
 
                 default:
@@ -238,13 +237,15 @@ public class POOFS {
     }
 
     public static void listarClientes( ArrayList<Cliente> clientes) {
+        System.out.println("Todos os clientes pertencentes ao sistema:\n");
         for (Cliente c : clientes) {
             System.out.println(c.getNome() + ", " + c.getContribuinte() + ", " + c.getLocalizacao());
 
         }
     }
 
-    public static void listarFaturas( ArrayList<Cliente> clientes,ArrayList<Fatura> faturas,ArrayList<Produto> produtos) {
+    public static void listarFaturas( ArrayList<Cliente> clientes,ArrayList<Fatura> faturas) {
+        System.out.println("Os dados de todas as faturas:\n\n");
         for (Fatura fatura : faturas) {
             Cliente cliente = fatura.getCliente();
 
@@ -253,9 +254,8 @@ public class POOFS {
             ArrayList<Produto> produtosFatura = fatura.getProdutos();
 
 
-
             // Exibe as informações da fatura
-            System.out.printf("Fatura Número: %s, "
+            System.out.printf("Fatura Número: %d, "
                             + "Cliente: %s, "
                             + "Localização: %s, "
                             + "Número de Produtos: %d, "
@@ -266,22 +266,35 @@ public class POOFS {
                     cliente.getLocalizacao(),
                     produtosFatura.size(),
                     fatura.calcularPrecoSemIva(),
-                    fatura.calcularTaxaImpostoTotal());
+                    fatura.calcularPrecoComIva());
         }
     }
-    public static void visualizarFatura( ArrayList<Cliente> clientes,ArrayList<Fatura> faturas,ArrayList<Produto> produtos) {
+    public static void visualizarFatura( ArrayList<Fatura> faturas) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Para visualizar a fatura de um cliente, precisa de inserir os dados do mesmo!");
         System.out.println("Introduza o seu nome: ");
         String nome = scanner.nextLine();
         System.out.println("Introduza o seu contribuinte: ");
         String contribuinte = scanner.nextLine();
-        System.out.println("Introduza a sua localização (Acores, Madeira ou Continente): ");
-        String localizacao = scanner.nextLine();
-        for (Cliente c : clientes) {
-            if(nome.equals(c.getNome())){
-
+        for(Fatura fatura : faturas){
+            if(fatura.getCliente().getNome().equals(nome) && fatura.getCliente().getContribuinte().equals(contribuinte)){
+                System.out.println("======== Visualizar Fatura =======");
+                System.out.println("=Número da Fatura: " + fatura.getNumeroFatura());
+                System.out.println("=Cliente: " + fatura.getCliente().toString());
+                System.out.println("=Dados dos produtos presentes:");
+                for(Produto produto : fatura.getProdutos()){
+                    System.out.println("=-> Nome: " + produto.getNome());
+                    System.out.println("=-> Quantidade: " + produto.getQuantidade());
+                    System.out.printf("=-> Valor Total sem IVA: %.2f\n",produto.calcularPrecoTotalSemIva());
+                    System.out.printf("=-> Taxa do IVA: %d%%\n", produto.calcularTaxa(fatura.getCliente().getLocalizacao()));
+                    System.out.printf("=-> Valor do IVA(€): %.2f\n", produto.calcularPrecoTotalSemIva() * (produto.calcularTaxa(fatura.getCliente().getLocalizacao())/100));//acho que nao vale a pena criar uma função para isto
+                    System.out.printf("=-> Valor Total com IVA: %.2f\n", produto.calcularPrecoComIvaIndividual(fatura.getCliente().getLocalizacao()));
+                    System.out.println();
+                }
+                System.out.println("=Preço Total sem IVA: "+fatura.calcularPrecoSemIva());
+                System.out.println("=Valot Total do IVA: "+ (fatura.calcularPrecoComIva()-fatura.calcularPrecoSemIva()));
+                System.out.println("=Preço Total com IVA: "+fatura.calcularPrecoComIva());
             }
-
         }
     }
     public static void criarFaturas(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
@@ -329,8 +342,13 @@ public class POOFS {
         }
 
         // Criar a fatura
-        System.out.print("Insira o número da fatura: ");
-        String numeroFatura = scanner.next();
+        int numeroFatura=0;
+        for(Fatura fatura : faturas) {
+            if(fatura.getNumeroFatura()>numeroFatura){
+                numeroFatura=fatura.getNumeroFatura();
+            }
+        }
+        numeroFatura++;
 
         System.out.print("Insira a data da fatura (yyyy-MM-dd): ");
         String dataFatura = scanner.next();
