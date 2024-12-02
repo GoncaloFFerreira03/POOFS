@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -44,6 +45,7 @@ public class POOFS {
     private static void menuSistema( ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
         Scanner scanner = new Scanner(System.in);
         boolean continuar = true;
+
         while (continuar) {
             System.out.println("=== MENU PRINCIPAL ===");
             System.out.println("1. Criar Cliente");
@@ -59,8 +61,16 @@ public class POOFS {
             System.out.println("11. Sair");
             System.out.print("Escolha uma opção: ");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine(); // Consome a quebra de linha após o número
+            int opcao;
+            try {
+                opcao = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Opção inválida! Por favor, escolha uma opção válida.");
+                scanner.nextLine();
+                continue;
+            }
+
 
             switch (opcao) {
                 case 1:
@@ -99,7 +109,8 @@ public class POOFS {
                     // Implementar método para mostrar estatísticas
                     break;
                 case 10://Estatisticas
-                    mostrarEstatisticas(faturas, produtos);
+                    System.out.println("Opção escolhida: Estatísticas");
+                    // Implementar método para mostrar estatísticas
                     break;
                 case 11://Sair
                     System.out.println("Saindo do programa...");
@@ -279,17 +290,25 @@ public class POOFS {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduza o seu nome: ");
         String nome = scanner.nextLine();
-        System.out.println("Introduza o seu contribuinte: ");
-        String contribuinte = scanner.nextLine();
+        String contribuinte;
+        while (true) {
+            System.out.println("Introduza o seu contribuinte: ");
+            contribuinte = scanner.nextLine();
+            if (contribuinte.length() == 9 ) {
+                break;
+            } else {
+                System.out.println("Contribuinte inválido! Certifique-se de que tem exatamente 9 dígitos.");
+            }
+        }
         String localizacao;
         while (true) {
-            System.out.println("Introduza a sua localização (Acores, Madeira ou Portugal (Continental) ): ");
+            System.out.println("Introduza a sua localização (Acores, Madeira ou Portugal Continental): ");
             localizacao = scanner.nextLine();
 
-            if (localizacao.equals("Acores") || localizacao.equals("Madeira") || localizacao.equals("Portugal")) {
+            if (localizacao.equals("Acores") || localizacao.equals("Madeira") || localizacao.equals("Portugal Continental")) {
                 break;
             }
-            System.out.println("Localização inválida! Por favor, insira 'Açores', 'Madeira', ou 'Portugal'.");
+            System.out.println("Localização invalida! Por favor, insira 'Acores', 'Madeira', ou 'Portugal Continental'.");
         }
         Cliente cliente = new Cliente(nome,contribuinte,localizacao);
         clientes.add(cliente);
@@ -305,7 +324,7 @@ public class POOFS {
         String nome = scanner.nextLine();
         System.out.println("Introduza o seu contribuinte: ");
         String contribuinte = scanner.nextLine();
-        System.out.println("Introduza a sua localização (Acores, Madeira ou Portugal (Continental) ): ");
+        System.out.println("Introduza a sua localização (Acores, Madeira ou Continente): ");
         String localizacao = scanner.nextLine();
         for (Cliente c : clientes) {
             if (c.getNome().equals(nome) && c.getContribuinte().equals(contribuinte) && c.getLocalizacao().equals(localizacao)) {
@@ -316,8 +335,15 @@ public class POOFS {
                 System.out.println("= 4. === MENU PRINCIPAL === = ");
                 System.out.println("=============================");
                 System.out.print("Escolha uma opção: ");
-                int opcao = scanner.nextInt();
-                scanner.nextLine();
+                int opcao;
+                try {
+                    opcao = scanner.nextInt();
+                    scanner.nextLine();
+                } catch (InputMismatchException e) {
+                    System.out.println("Opção inválida! Por favor, escolha uma opção válida.");
+                    scanner.nextLine();
+                    continue;
+                }
                 switch (opcao) {
                     case 1:
                         System.out.println("Introduza o seu novo nome: ");
@@ -325,14 +351,30 @@ public class POOFS {
                         c.setNome(novoNome);
                         break;
                     case 2:
-                        System.out.println("Introduza o seu novo Contribuinte: ");
-                        String novoContribuinte = scanner.nextLine();
-                        c.setNome(novoContribuinte);
+                        String novoContribuinte;
+                        while (true) {
+                            System.out.println("Introduza o seu novo contribuinte: ");
+                            novoContribuinte = scanner.nextLine();
+                            if (contribuinte.length() == 9 ) {
+                                break;
+                            } else {
+                                System.out.println("Contribuinte invalido! Certifique-se de que tem exatamente 9 dígitos.");
+                            }
+                        }
+                        c.setContribuinte(novoContribuinte);
                         break;
                     case 3:
-                        System.out.println("Introduza a sua nova Localizacao: ");
-                        String novaLoc = scanner.nextLine();
-                        c.setNome(novaLoc);
+                        String novaLoc;
+                        while (true) {
+                            System.out.println("Introduza a sua localização (Acores, Madeira ou Portugal Continental): ");
+                            novaLoc = scanner.nextLine();
+
+                            if (novaLoc.equals("Acores") || novaLoc.equals("Madeira") || novaLoc.equals("Portugal Continental")) {
+                                break;
+                            }
+                            System.out.println("Localização invalida! Por favor, insira 'Acores', 'Madeira', ou 'Portugal Continental'.");
+                        }
+                        c.setLocalizacao(novaLoc);
                         break;
                     case 4:
                         menuSistema(clientes, faturas, produtos);
@@ -340,10 +382,6 @@ public class POOFS {
 
                 }
             }
-        }
-        for(Cliente c:clientes)
-        {
-            System.out.println("Nome: " + c.getNome() + ", Contribuinte: " + c.getContribuinte() + ", Localização: " + c.getLocalizacao());
         }
     }
 
@@ -433,7 +471,7 @@ public class POOFS {
         while (adicionarMaisProdutos) {
             System.out.println("Escolha os produtos a adicionar:");
             for (int i = 0; i < produtos.size(); i++) {
-                System.out.printf("%d -> %s (%.2f €/unid.)\n", i + 1, produtos.get(i).getNome(), produtos.get(i).calcularPrecoComIvaIndividual(clienteEscolhido.getLocalizacao()));
+                System.out.println((i + 1) + " -> " + produtos.get(i).getNome()); // Assumindo que Produto tem o método getNome()
             }
 
             int produtoIndex = -1;
@@ -444,12 +482,7 @@ public class POOFS {
                     System.out.println("Opção inválida. Tente novamente.");
                 }
             }
-            Produto produtoEscolhido = produtos.get(produtoIndex);
-            System.out.println("Quantidade: ");
-            int quantidade = scanner.nextInt();
-            produtoEscolhido.setQuantidade(quantidade);
-
-            produtosEscolhidos.add(produtoEscolhido);
+            produtosEscolhidos.add(produtos.get(produtoIndex));
 
             // Perguntar se deseja adicionar mais produtos
             System.out.print("Deseja adicionar mais produtos? (s/n): ");
@@ -478,10 +511,9 @@ public class POOFS {
         System.out.println("Número da Fatura: " + numeroFatura);
         System.out.println("Cliente: " + clienteEscolhido.getNome());
         System.out.println("Data: " + dataFatura);
-        System.out.printf("Preço Total: %.2f€\n", novaFatura.calcularPrecoComIva());
         System.out.println("Produtos na fatura:");
         for (Produto produto : produtosEscolhidos) {
-            System.out.println("- " + produto.getNome()+ " ("+ produto.getQuantidade() +")"); // Assumindo que Produto tem o método getNome()
+            System.out.println("- " + produto.getNome()); // Assumindo que Produto tem o método getNome()
         }
     }
     public static void editarFatura(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
@@ -591,26 +623,6 @@ public class POOFS {
         for (Produto produto : faturaEscolhida.getProdutos()) {
             System.out.println("- " + produto.getNome());
         }
-    }
-
-    public static void mostrarEstatisticas(ArrayList<Fatura> faturas, ArrayList<Produto> produtos){
-        int numFaturas = faturas.size();
-        int numProdutos = produtos.size();
-        double valorTotalSemIVA = 0.0;
-        double valorTotalDoIVA = 0.0;
-        double valorTotalComIVA = 0.0;
-        for(Fatura fatura :faturas){
-            valorTotalSemIVA += fatura.calcularPrecoSemIva();
-            valorTotalComIVA += fatura.calcularPrecoComIva();
-        }
-        valorTotalDoIVA += (valorTotalComIVA - valorTotalSemIVA);
-
-        System.out.println("=====Estatísticas das Faturas=====");
-        System.out.println("=Total de faturas: " + numFaturas);
-        System.out.println("=Total de produtos: " + numProdutos);
-        System.out.printf("=Valor Total sem IVA(€): %.2f\n",valorTotalSemIVA);
-        System.out.printf("=Valor Total do IVA(€): %.2f\n",valorTotalDoIVA);
-        System.out.printf("=Valor Total com IVA(€): %.2f\n",valorTotalComIVA);
     }
 }
 
