@@ -99,8 +99,7 @@ public class POOFS {
                     // Implementar método para mostrar estatísticas
                     break;
                 case 10://Estatisticas
-                    System.out.println("Opção escolhida: Estatísticas");
-                    // Implementar método para mostrar estatísticas
+                    mostrarEstatisticas(faturas, produtos);
                     break;
                 case 11://Sair
                     System.out.println("Saindo do programa...");
@@ -284,13 +283,13 @@ public class POOFS {
         String contribuinte = scanner.nextLine();
         String localizacao;
         while (true) {
-            System.out.println("Introduza a sua localização (Acores, Madeira ou Portugal Continental): ");
+            System.out.println("Introduza a sua localização (Acores, Madeira ou Portugal (Continental) ): ");
             localizacao = scanner.nextLine();
 
-            if (localizacao.equals("Acores") || localizacao.equals("Madeira") || localizacao.equals("Portugal Continental")) {
+            if (localizacao.equals("Acores") || localizacao.equals("Madeira") || localizacao.equals("Portugal")) {
                 break;
             }
-            System.out.println("Localização inválida! Por favor, insira 'Açores', 'Madeira', ou 'Portugal Continental'.");
+            System.out.println("Localização inválida! Por favor, insira 'Açores', 'Madeira', ou 'Portugal'.");
         }
         Cliente cliente = new Cliente(nome,contribuinte,localizacao);
         clientes.add(cliente);
@@ -306,7 +305,7 @@ public class POOFS {
         String nome = scanner.nextLine();
         System.out.println("Introduza o seu contribuinte: ");
         String contribuinte = scanner.nextLine();
-        System.out.println("Introduza a sua localização (Acores, Madeira ou Continente): ");
+        System.out.println("Introduza a sua localização (Acores, Madeira ou Portugal (Continental) ): ");
         String localizacao = scanner.nextLine();
         for (Cliente c : clientes) {
             if (c.getNome().equals(nome) && c.getContribuinte().equals(contribuinte) && c.getLocalizacao().equals(localizacao)) {
@@ -434,7 +433,7 @@ public class POOFS {
         while (adicionarMaisProdutos) {
             System.out.println("Escolha os produtos a adicionar:");
             for (int i = 0; i < produtos.size(); i++) {
-                System.out.println((i + 1) + " -> " + produtos.get(i).getNome()); // Assumindo que Produto tem o método getNome()
+                System.out.printf("%d -> %s (%.2f €/unid.)\n", i + 1, produtos.get(i).getNome(), produtos.get(i).calcularPrecoComIvaIndividual(clienteEscolhido.getLocalizacao()));
             }
 
             int produtoIndex = -1;
@@ -445,7 +444,12 @@ public class POOFS {
                     System.out.println("Opção inválida. Tente novamente.");
                 }
             }
-            produtosEscolhidos.add(produtos.get(produtoIndex));
+            Produto produtoEscolhido = produtos.get(produtoIndex);
+            System.out.println("Quantidade: ");
+            int quantidade = scanner.nextInt();
+            produtoEscolhido.setQuantidade(quantidade);
+
+            produtosEscolhidos.add(produtoEscolhido);
 
             // Perguntar se deseja adicionar mais produtos
             System.out.print("Deseja adicionar mais produtos? (s/n): ");
@@ -474,9 +478,10 @@ public class POOFS {
         System.out.println("Número da Fatura: " + numeroFatura);
         System.out.println("Cliente: " + clienteEscolhido.getNome());
         System.out.println("Data: " + dataFatura);
+        System.out.printf("Preço Total: %.2f€\n", novaFatura.calcularPrecoComIva());
         System.out.println("Produtos na fatura:");
         for (Produto produto : produtosEscolhidos) {
-            System.out.println("- " + produto.getNome()); // Assumindo que Produto tem o método getNome()
+            System.out.println("- " + produto.getNome()+ " ("+ produto.getQuantidade() +")"); // Assumindo que Produto tem o método getNome()
         }
     }
     public static void editarFatura(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
@@ -586,6 +591,26 @@ public class POOFS {
         for (Produto produto : faturaEscolhida.getProdutos()) {
             System.out.println("- " + produto.getNome());
         }
+    }
+
+    public static void mostrarEstatisticas(ArrayList<Fatura> faturas, ArrayList<Produto> produtos){
+        int numFaturas = faturas.size();
+        int numProdutos = produtos.size();
+        double valorTotalSemIVA = 0.0;
+        double valorTotalDoIVA = 0.0;
+        double valorTotalComIVA = 0.0;
+        for(Fatura fatura :faturas){
+            valorTotalSemIVA += fatura.calcularPrecoSemIva();
+            valorTotalComIVA += fatura.calcularPrecoComIva();
+        }
+        valorTotalDoIVA += (valorTotalComIVA - valorTotalSemIVA);
+
+        System.out.println("=====Estatísticas das Faturas=====");
+        System.out.println("=Total de faturas: " + numFaturas);
+        System.out.println("=Total de produtos: " + numProdutos);
+        System.out.printf("=Valor Total sem IVA(€): %.2f\n",valorTotalSemIVA);
+        System.out.printf("=Valor Total do IVA(€): %.2f\n",valorTotalDoIVA);
+        System.out.printf("=Valor Total com IVA(€): %.2f\n",valorTotalComIVA);
     }
 }
 
