@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class POOFS {
     public static void main(String[] args) {
@@ -8,8 +13,6 @@ public class POOFS {
 
         // Ler o arquivo
         Ficheiro ficheiro = new Ficheiro(nomeFicheiro);
-        Ficheiro ficheiro2 = new Ficheiro(nomeFicheiro);
-
 
         // Listas para armazenar os objetos criados
         ArrayList<Cliente> clientes = new ArrayList<>();
@@ -17,7 +20,7 @@ public class POOFS {
         ArrayList<Produto> produtos = new ArrayList<>();
 
         // Processar o conteúdo do ficheiro
-        lerFicheiroTexto(ficheiro, clientes, faturas, produtos);
+        lerFicheiroTexto(ficheiro, clientes, faturas, produtos,0);//0-> ler o ficheiro.txt, 1->ler as faturas extra
         /*for (Produto produto : produtos) {
             if (produto instanceof Alimentar) {
                 Alimentar alimentar = (Alimentar) produto;
@@ -87,11 +90,12 @@ public class POOFS {
                     // Implementar método para exportar faturas para ficheiro
                     break;
                 case 8://Importar Faturas
-                    System.out.println("Opção escolhida: Estatísticas");
-                    // Implementar método para mostrar estatísticas
+                    Ficheiro ficheiro1 = new Ficheiro("src/faturasExtra.txt");
+                    lerFicheiroTexto(ficheiro1, clientes, faturas, produtos,1);
+                    listarFaturas(clientes,faturas);
                     break;
                 case 9://Exportar Faturas
-                    System.out.println("Opção escolhida: Estatísticas");
+                    criarFicheiroDeTexto(faturas);
                     // Implementar método para mostrar estatísticas
                     break;
                 case 10://Estatisticas
@@ -110,60 +114,168 @@ public class POOFS {
 
         scanner.close();
     }
-    public static void lerFicheiroTexto(Ficheiro ficheiro, ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
+    public static void lerFicheiroTexto(Ficheiro ficheiro, ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos, int type) {
         // Processar as linhas lidas
         for (String linha : ficheiro.linhas) {
             String[] parts = linha.split("\\|"); // Dividir a linha pelo separador "|"
+            if(type == 0) {
+                switch (parts[0]) {
+                    case "Cliente":
+                        // Criar um cliente
+                        clientes.add(new Cliente(parts[1], parts[2], parts[3]));
+                        //FicheiroO.salvarObjetos("FicheiroObj", parts[1], parts[2], parts[3]);
+                        break;
 
-            switch (parts[0]) {
-                case "Cliente":
-                    // Criar um cliente
-                    clientes.add(new Cliente(parts[1], parts[2], parts[3]));
-                    //FicheiroO.salvarObjetos("FicheiroObj", parts[1], parts[2], parts[3]);
-                    break;
-
-                case "ProdutoF":
-                case "ProdutoA":
-                    // Criar um produto farmacêutico ou alimentar
-                    Produto produto;
-                    if (parts[0].equals("ProdutoF")) {
-                        produto = new Farmacia(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), parts[6]);
-                    } else {
-                        ArrayList<String> certOuCat =new ArrayList<>();
-                        for(int i=7;i< parts.length; i++){
-                            certOuCat.add(parts[i]);
+                    case "ProdutoF":
+                    case "ProdutoA":
+                        // Criar um produto farmacêutico ou alimentar
+                        Produto produto;
+                        if (parts[0].equals("ProdutoF")) {
+                            produto = new Farmacia(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), parts[6]);
+                        } else {
+                            ArrayList<String> certOuCat = new ArrayList<>();
+                            for (int i = 7; i < parts.length; i++) {
+                                certOuCat.add(parts[i]);
+                            }
+                            produto = new Alimentar(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), Boolean.parseBoolean(parts[6]), certOuCat);
                         }
-                        produto = new Alimentar(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), Boolean.parseBoolean(parts[6]),certOuCat);
-                    }
-                    produtos.add(produto);
-                    break;
+                        produtos.add(produto);
+                        break;
 
-                case "Fatura":
-                    // Criar uma fatura
-                    ArrayList<Produto> produtoFatura =  new ArrayList<>();
-                    for(Produto produto1: produtos){
-                        if(produto1.getCodigo().equals(parts[4])){
-                            produtoFatura.add(produto1);
+                    case "Fatura":
+                        // Criar uma fatura
+                        ArrayList<Produto> produtoFatura = new ArrayList<>();
+                        for (Produto produto1 : produtos) {
+                            if (produto1.getCodigo().equals(parts[4])) {
+                                produtoFatura.add(produto1);
+                            }
                         }
-                    }
 
-                    Cliente cliente= null;
-                    for(Cliente cliente1: clientes){
-                        if(cliente1.getContribuinte().equals(parts[2])){
-                            cliente = cliente1;
+                        Cliente cliente = null;
+                        for (Cliente cliente1 : clientes) {
+                            if (cliente1.getContribuinte().equals(parts[2])) {
+                                cliente = cliente1;
+                                break;
+                            }
+                        }
+                        int id = Integer.parseInt(parts[1]);
+                        faturas.add(new Fatura(id, cliente, parts[3], produtoFatura));
+                        break;
+
+                    default:
+                        System.out.println("Linha inválida: " + linha);
+                        break;
+                }
+            }
+            else if(type == 1) {
+                // Obter o número de contribuinte (cliente)
+                String contribuinte = parts[0];
+                Cliente cliente = null;
+
+                // Encontrar o cliente correspondente pelo contribuinte
+                for (Cliente cliente1 : clientes) {
+                    if (cliente1.getContribuinte().equals(contribuinte)) {
+                        cliente = cliente1;
+                        break;
+                    }
+                }
+
+                // Verificar se o cliente foi encontrado
+                if (cliente == null) {
+                    System.out.println("Cliente não encontrado para o contribuinte: " + contribuinte);
+                    continue;
+                }
+
+                // Obter a data
+                String data = parts[1];
+
+                // Obter os códigos dos produtos a partir da terceira posição em diante
+                ArrayList<Produto> produtoFatura = new ArrayList<>();
+                for (int i = 2; i < parts.length; i++) {
+                    String codigoProduto = parts[i];
+                    for (Produto produto : produtos) {
+                        if (produto.getCodigo().equals(codigoProduto)) {
+                            produtoFatura.add(produto);
                             break;
                         }
                     }
-                    int id = Integer.parseInt(parts[1]);
-                    faturas.add(new Fatura(id, cliente, parts[3], produtoFatura));
-                    break;
+                }
 
-                default:
-                    System.out.println("Linha inválida: " + linha);
-                    break;
+                // Verificar se todos os produtos foram encontrados
+                if (produtoFatura.isEmpty()) {
+                    System.out.println("Nenhum produto encontrado para a linha: " + linha);
+                    continue;
+                }
+
+                // Determinar o próximo ID da fatura
+                int numeroFatura=0;
+                for(Fatura fatura : faturas) {
+                    if(fatura.getNumeroFatura()>numeroFatura){
+                        numeroFatura=fatura.getNumeroFatura();
+                    }
+                }
+                numeroFatura++;
+                // Criar a nova fatura e adicioná-la à lista de faturas
+                Fatura novaFatura = new Fatura(numeroFatura, cliente, data, produtoFatura);
+                faturas.add(novaFatura);
+
+                // Opcional: Exibir um resumo da fatura criada
+                System.out.println("Fatura criada com sucesso: ID " + numeroFatura + ", Cliente " + cliente.getNome() + ", Data " + data);
             }
         }
     }
+
+    public static void criarFicheiroDeTexto(ArrayList<Fatura> faturasss){
+        Scanner scanner = new Scanner(System.in);
+
+        // Pedir ao utilizador o nome do ficheiro
+        System.out.print("Insira o nome do ficheiro (ex.: faturasExtra.txt): ");
+        String nomeFicheiro = scanner.nextLine();
+
+        try {
+            // Criar o objeto File
+            File ficheiro = new File("src/"+nomeFicheiro);
+
+            // Verificar se o ficheiro já existe
+            if (ficheiro.createNewFile()) {
+                System.out.println("Ficheiro criado: " + ficheiro.getName());
+            } else {
+                System.out.println("O ficheiro já existe.");
+                return;
+            }
+
+            // Escrever no ficheiro
+            FileWriter escritor = new FileWriter(ficheiro);
+
+            // Escrever o conteúdo das faturas
+            for (Fatura fatura : faturasss) {
+                StringBuilder linha = new StringBuilder();
+                linha.append(fatura.getCliente().getContribuinte()).append("|")
+                        .append(fatura.getData()).append("|");
+
+                // Adicionar os códigos dos produtos
+                for (Produto produto : fatura.getProdutos()) {
+                    linha.append(produto.getCodigo()).append("|");
+                }
+
+                // Remover o último "|" e adicionar uma nova linha
+                if (linha.charAt(linha.length() - 1) == '|') {
+                    linha.deleteCharAt(linha.length() - 1);
+                }
+                linha.append("\n");
+
+                // Escrever a linha no ficheiro
+                escritor.write(linha.toString());
+            }
+
+            escritor.close(); // Fechar o escritor
+            System.out.println("Conteúdo gravado no ficheiro: " + nomeFicheiro);
+        } catch (IOException e) {
+            System.out.println("Ocorreu um erro ao criar o ficheiro.");
+            e.printStackTrace();
+        }
+    }
+
     public static Cliente registar( ArrayList<Cliente> clientes) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduza o seu nome: ");
@@ -350,8 +462,9 @@ public class POOFS {
         }
         numeroFatura++;
 
-        System.out.print("Insira a data da fatura (yyyy-MM-dd): ");
-        String dataFatura = scanner.next();
+        LocalDate dataAtual = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String dataFatura = dataAtual.format(formatter);
 
         // Instancia a nova fatura e adiciona à lista de faturas
         Fatura novaFatura = new Fatura(numeroFatura, clienteEscolhido, dataFatura, produtosEscolhidos);
