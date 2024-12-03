@@ -217,9 +217,17 @@ public class POOFS {
     private static void criarFicheiroDeTexto(ArrayList<Fatura> faturasss){
         Scanner scanner = new Scanner(System.in);
 
-        // Pedir ao utilizador o nome do ficheiro
-        System.out.print("= Insira o nome do ficheiro (ex.: faturasExtra.txt): ");
-        String nomeFicheiro = scanner.nextLine();//falta fazer aqui a verificação que a string tenha a parte ".txt"
+        String nomeFicheiro;
+        while (true) {
+            System.out.print("= Insira o nome do ficheiro (ex.: faturasExtra.txt): ");
+            nomeFicheiro = scanner.nextLine();
+
+            if (nomeFicheiro.endsWith(".txt")) {
+                break;
+            } else {
+                System.out.println("Erro: O nome do ficheiro deve terminar com \".txt\". Tente novamente.");
+            }
+        }
 
         try {
             // Criar o objeto File
@@ -271,11 +279,34 @@ public class POOFS {
         String nome = scanner.nextLine();
         String contribuinte;
         while (true) {
+            boolean flag=true;
             System.out.println("= Introduza o seu contribuinte: ");
             contribuinte = scanner.nextLine();
-            if (contribuinte.length() == 9 ) {
-                break;
-            } else {
+            if(contribuinte.length() == 9 ) {
+                for(int i=0;i<contribuinte.length();i++)
+                {
+                    if(!Character.isDigit(contribuinte.charAt(i)))
+                    {
+                        flag = false;
+                        break;
+                    }
+
+                }
+                if (flag) {
+                    for(Cliente c: clientes)
+                    {
+                        if(c.getContribuinte().equals(contribuinte))
+                        {
+                            flag=false;
+                            break;
+                        }
+                    }
+                }
+                if(flag) {
+                    break;
+                }
+            }
+            else {
                 System.out.println("Contribuinte inválido! Certifique-se de que tem exatamente 9 dígitos.");
             }
         }
@@ -331,13 +362,30 @@ public class POOFS {
                     case 2:
                         String novoContribuinte;
                         while (true) {
+                            boolean flag=true;
                             System.out.println("= Introduza o seu novo contribuinte: ");
                             novoContribuinte = scanner.nextLine();
-                            if (contribuinte.length() == 9 ) {
-                                fim = c;
-                                break;
+                            fim = c;
+                            if(novoContribuinte.length() == 9) {
+                                for (int i = 0; i < novoContribuinte.length(); i++) {
+                                    if (!Character.isDigit(novoContribuinte.charAt(i))) {
+                                        flag = false;
+                                        break;
+                                    }
+                                }
+                                if (flag) {
+                                    for (Cliente cliente : clientes) {
+                                        if (cliente.getContribuinte().equals(novoContribuinte)) {
+                                            flag = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (flag) {
+                                    break;
+                                }
                             } else {
-                                System.out.println("Contribuinte invalido! Certifique-se de que tem exatamente 9 dígitos.");
+                                System.out.println("Contribuinte inválido! Certifique-se de que tem exatamente 9 dígitos.");
                             }
                         }
                         c.setContribuinte(novoContribuinte);
