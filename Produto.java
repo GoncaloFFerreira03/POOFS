@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Produto implements Serializable {
+abstract class Produto implements Serializable {
     private String codigo;
     private int quantidade;
     private String nome;
@@ -62,7 +62,7 @@ public abstract class Produto implements Serializable {
         return precoProduto;
     }
 
-    public abstract int calcularTaxa(String local);
+    public abstract double calcularTaxa(String local);
 
     public double calcularPrecoTotalSemIva(){
         double precoTotal = 0;

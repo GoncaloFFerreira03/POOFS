@@ -1,69 +1,20 @@
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Farmacia extends Produto{
-    private boolean prescricao;
-    private String medOuCat;
+abstract class Farmacia extends Produto {
 
-    public Farmacia(String codigo, String nome, String descricao, double precoSemIva, int quantidade, String medOuCat) {
+    public Farmacia(String codigo, String nome, String descricao, double precoSemIva, int quantidade) {
         super(codigo, nome, descricao, precoSemIva, quantidade);
-        this.prescricao = prescricao;
-        this.medOuCat = medOuCat;
     }
 
-    public boolean getPrescricao() {
-        return prescricao;
-    }
 
-    public String getMedOuCat() {
-        return medOuCat;
-    }
+    public abstract double calcularTaxaProduto(String local);
 
-    private void setPrescricao() {
-        String[] palavras = {"beleza", "bem-estar", "bebés", "animais", "outro"};
-        for (String palavra : palavras) {
-            if (medOuCat.toLowerCase().equals(palavra.toLowerCase())) {
-                this.prescricao = true;
-                break;
-            }
-        }
-        this.prescricao = false;
-    }
+    public abstract double calcularTaxaExtra();
 
-    private int calcularTaxaExtra() {
-        int taxaExtra = 0;
-        if (!prescricao) {
-            if (medOuCat.toLowerCase().equals("animais")) {
-                taxaExtra -= 1;
-                return taxaExtra;
-            }
-        }
-        return taxaExtra;
-    }
-
-    public int calcularTaxa(String local){
-        int taxaTotal = 0;
-        if(local.equals("Portugal Continental"))   {
-            if(prescricao)
-                taxaTotal = 6;
-            else
-                taxaTotal = 23;
-        }
-        else if(local.equals("Madeira")){
-            if(prescricao)
-                taxaTotal = 5;
-            else
-                taxaTotal = 23;
-        }
-        else if(local.equals("Acores")){
-            if(prescricao)
-                taxaTotal = 4;
-            else
-                taxaTotal = 23;
-        }
-        taxaTotal += calcularTaxaExtra();
-        return taxaTotal;
+    //este é o metodo final
+    public double calcularTaxa(String local){//fazer dois metodos abstratos, o de calcular a taca normal e o da taxa extra
+        return calcularTaxaProduto(local) + calcularTaxaExtra();
     }
 }

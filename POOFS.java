@@ -120,7 +120,6 @@ public class POOFS {
                     case "Cliente":
                         // Criar um cliente
                         clientes.add(new Cliente(parts[1], parts[2], parts[3]));
-                        //FicheiroO.salvarObjetos("FicheiroObj", parts[1], parts[2], parts[3]);
                         break;
 
                     case "ProdutoF":
@@ -128,15 +127,58 @@ public class POOFS {
                         // Criar um produto farmacêutico ou alimentar
                         Produto produto;
                         if (parts[0].equals("ProdutoF")) {
-                            produto = new Farmacia(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), parts[6]);
-                        } else {
-                            ArrayList<String> certOuCat = new ArrayList<>();
-                            for (int i = 7; i < parts.length; i++) {
-                                certOuCat.add(parts[i]);
+                            String medicoOuCategoria = parts[6];
+                            if(medicoOuCategoria.matches("([A-Z][a-z]+(\\s[A-Z][a-z]+)+)")) {//se for o nome de um médico
+                                produto = new Prescricao(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), parts[6]);
+                                produtos.add(produto);
                             }
-                            produto = new Alimentar(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), Boolean.parseBoolean(parts[6]), certOuCat);
+                            else {
+                                produto = new Simples(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), parts[6]);
+                                produtos.add(produto);
+                            }
+                        } else {
+
+                            ArrayList<String> certOuCat = new ArrayList<>();
+
+                            if (parts.length <= 7 || parts[7] == null) {
+                                produto = new Normal(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), Boolean.parseBoolean(parts[6]));
+                                produtos.add(produto);
+                            } else {
+                                // Preenche o ArrayList com os elementos a partir de parts[7]
+                                for (int i = 7; i < parts.length; i++) {
+                                    certOuCat.add(parts[i]);
+                                }
+
+                                // Verifica se tem apenas uma palavra e é uma categoria
+                                if (certOuCat.size() == 1) {
+                                    String singleItem = certOuCat.get(0);
+                                    if (singleItem.equalsIgnoreCase("congelado") ||
+                                            singleItem.equalsIgnoreCase("enlatado") ||
+                                            singleItem.equalsIgnoreCase("vinho")) {
+                                        produto = new Intermedia(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), Boolean.parseBoolean(parts[6]), singleItem);
+                                        produtos.add(produto);
+                                    }
+                                }
+                                // Verifica se há de 1 a 4 certificações válidas
+                                else if (certOuCat.size() >= 1 && certOuCat.size() <= 4) {
+                                    boolean validCertifications = true;
+                                    for (String cert : certOuCat) {
+                                        if (!cert.equalsIgnoreCase("ISO22000") &&
+                                                !cert.equalsIgnoreCase("FSSC22000") &&
+                                                !cert.equalsIgnoreCase("HACCP") &&
+                                                !cert.equalsIgnoreCase("GMP")) {
+                                            validCertifications = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (validCertifications) {
+                                        produto = new Reduzida(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Integer.parseInt(parts[4]), Boolean.parseBoolean(parts[6]), certOuCat);
+                                        produtos.add(produto);
+                                    }
+                                }
+                            }
                         }
-                        produtos.add(produto);
                         break;
 
                     case "Fatura":
@@ -541,13 +583,13 @@ public class POOFS {
                     System.out.println("\n= -> Nome: " + produto.getNome());
                     System.out.println("= -> Quantidade: " + produto.getQuantidade());
                     System.out.printf("= -> Valor Total sem IVA: %.2f\n",produto.calcularPrecoTotalSemIva());
-                    System.out.printf("= -> Taxa do IVA: %d%%\n", produto.calcularTaxa(fatura.getCliente().getLocalizacao()));
+                    System.out.printf("= -> Taxa do IVA: %.2f%%\n", produto.calcularTaxa(fatura.getCliente().getLocalizacao()));
                     System.out.printf("= -> Valor do IVA(€): %.2f\n", produto.calcularPrecoTotalSemIva() * (produto.calcularTaxa(fatura.getCliente().getLocalizacao())/100));//acho que nao vale a pena criar uma função para isto
                     System.out.printf("= -> Valor Total com IVA: %.2f\n", produto.calcularPrecoComIvaIndividual(fatura.getCliente().getLocalizacao()));
                 }
-                System.out.println("\n= Preço Total sem IVA(€): "+fatura.calcularPrecoSemIva());
-                System.out.println("= Valor Total do IVA(€): "+ (fatura.calcularPrecoComIva()-fatura.calcularPrecoSemIva()));
-                System.out.println("= Preço Total com IVA(€): "+fatura.calcularPrecoComIva());
+                System.out.printf("\n= Preço Total sem IVA(€): %.2f",fatura.calcularPrecoSemIva());
+                System.out.printf("= Valor Total do IVA(€): %.2f\n",(fatura.calcularPrecoComIva()-fatura.calcularPrecoSemIva()));
+                System.out.printf("= Preço Total com IVA(€): %.2f\n",fatura.calcularPrecoComIva());
                 System.out.println("=====================================\n");
             }
         }
@@ -636,19 +678,50 @@ public class POOFS {
                 }
             }
         }
+        int numeroFatura = 0;
 
-        // Criar a fatura
-        int numeroFatura=0;
-        for(Fatura fatura : faturas) {
-            if(fatura.getNumeroFatura()>numeroFatura){
-                numeroFatura=fatura.getNumeroFatura();
+        System.out.print("Insira o número da fatura: ");
+        while(true) {
+            if (scanner.hasNextInt()) {
+                boolean nova = true;
+                numeroFatura = scanner.nextInt();
+                for(Fatura fatura : faturas) {
+                    if(fatura.getNumeroFatura()==numeroFatura)
+                        nova=false;
+                }
+                if(nova)
+                    break;
+                else
+                    System.out.println("Esse número ja existe, insira um número válido.");
+            } else {
+                System.out.println("Erro: Por favor, insira um número válido.");
+                scanner.next();
             }
         }
-        numeroFatura++;
 
-        LocalDate dataAtual = LocalDate.now();
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String dataFatura = dataAtual.format(formatter);
+        String dataFatura = null;
+
+        while (true) {
+            System.out.println("Insira a data da fatura (formato: yyyy-MM-dd): ");
+            String input = scanner.next();
+
+            try {// Valida se o formato da data está correto
+                LocalDate dataInserida = LocalDate.parse(input, formatter);
+
+                LocalDate dataLimite = LocalDate.now().minusYears(1);
+
+                if (dataInserida.isBefore(dataLimite)) {// Verifica se a data inserida é há 1 ano ou mais recente
+                    System.out.println("Data inválida! Insira uma data há no máximo 1 ano atrás.");
+                } else {
+                    dataFatura = input; // Armazena a data válida
+                    break;
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Data inválida! Por favor, insira uma data no formato correto (yyyy-MM-dd).");
+            }
+        }
 
         // Instancia a nova fatura e adiciona à lista de faturas
         Fatura novaFatura = new Fatura(numeroFatura, clienteEscolhido, dataFatura, produtosEscolhidos);
@@ -822,7 +895,7 @@ public class POOFS {
     public static Object[] carregarDados(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos, String nomeFicheiro, String nomeFicheiroTexto) {
         File ficheiro = new File(nomeFicheiro);
         if (!ficheiro.exists()) {
-            System.out.println("Nenhum ficheiro de dados encontrado. Lendo dados do ficheiro de texto...");
+            System.out.println("Nenhum ficheiro de objetos encontrado. Vamos ler do ficheiro de texto...");
 
             // Criar o objeto Ficheiro e carregar o conteúdo do ficheiro de texto
             Ficheiro ficheiroTexto = new Ficheiro(nomeFicheiroTexto);

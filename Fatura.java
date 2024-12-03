@@ -46,13 +46,14 @@ public class Fatura  implements Serializable {
     }
 
 
-    public int calcularTaxaImpostoTotal(){
-        int taxaTotal=0;
+    public double calcularTaxaImpostoTotal(){
+        double taxaTotal=0;
         for (Produto produto : produtos) {
             taxaTotal += produto.calcularTaxa(cliente.getLocalizacao());
         }
         return taxaTotal;
     }
+
     public double calcularPrecoSemIva(){
         double precoTotal=0;
         for (Produto produto : produtos) {
