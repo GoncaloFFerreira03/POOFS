@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Farmacia extends Produto {
+public abstract class Farmacia extends Produto{
     private boolean prescricao;
     private String medOuCat;
 

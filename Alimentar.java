@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Alimentar extends Produto {
+public abstract class Alimentar extends Produto {
     private boolean biologico;
     private ArrayList<String> certOuCat = new ArrayList<>();//certificados ou categorias
     private String tipoDeTaxa = "normal";
