@@ -310,8 +310,28 @@ public class POOFS {
 
     private static Cliente registar( ArrayList<Cliente> clientes) {
         Scanner scanner = new Scanner(System.in);
+        String nome;
+        boolean nomeValido = true;
+
         System.out.println("\n= Introduza o seu nome: ");
-        String nome = scanner.nextLine();
+        nome = scanner.nextLine();
+        while (true) {
+            for (int i = 0; i < nome.length(); i++) {
+                if (!Character.isLetter(nome.charAt(i)) && nome.charAt(i) != ' ') {
+                    nomeValido = false;
+                    break;
+                }
+            }
+
+            if (nomeValido) {
+                break;
+            } else {
+                System.out.println("O nome só pode conter letras. Tente novamente.");
+                System.out.println("\n= Introduza o seu nome: ");
+                nome = scanner.nextLine();
+                nomeValido = true;
+            }
+        }
         String contribuinte;
         while (true) {
             boolean flag=true;
@@ -389,8 +409,27 @@ public class POOFS {
                 }
                 switch (opcao) {
                     case 1:
-                        System.out.println("= Introduza o seu novo nome: ");
-                        String novoNome = scanner.nextLine();
+                        String novoNome;
+                        boolean nomeValido = true;
+                        System.out.println("\n= Introduza o seu novo nome: ");
+                        novoNome = scanner.nextLine();
+                        while (true){
+                            for (int i = 0; i < novoNome.length(); i++) {
+                                if (!Character.isLetter(novoNome.charAt(i)) && nome.charAt(i) != ' ') {
+                                    nomeValido = false;
+                                    break;
+                                }
+                            }
+
+                            if (nomeValido) {
+                                break;
+                            } else {
+                                System.out.println("O nome só pode conter letras. Tente novamente.");
+                                System.out.println("\n= Introduza o seu novo nome: ");
+                                novoNome = scanner.nextLine();
+                                nomeValido = true;
+                            }
+                        }
                         c.setNome(novoNome);
                         fim = c;
                         break;
@@ -552,22 +591,50 @@ public class POOFS {
             int produtoIndex = -1;
             while (produtoIndex < 0 || produtoIndex >= produtos.size()) {
                 System.out.print("= Escolha o número correspondente ao produto: ");
-                produtoIndex = scanner.nextInt() - 1; // Converte de 1-based para 0-based
-                if (produtoIndex < 0 || produtoIndex >= produtos.size()) {
-                    System.out.println("Opção inválida. Tente novamente.");
+
+                if (scanner.hasNextInt()) {
+                    produtoIndex = scanner.nextInt() - 1;
+
+                    if (produtoIndex < 0 || produtoIndex >= produtos.size()) {
+                        System.out.println("Opção inválida. Tente novamente.");
+                    }
+                } else {
+                    System.out.println("Erro: Por favor, insira um número válido.");
+                    scanner.next(); // Descarta a entrada inválida
                 }
             }
             produtosEscolhidos.add(produtos.get(produtoIndex));
             Produto produtoEscolhido = produtos.get(produtoIndex);
-            System.out.println("= Quantidade: ");
-            int quantidade = scanner.nextInt();
+            int quantidade;
+            while (true) {
+                System.out.println("= Quantidade: ");
+
+                if (scanner.hasNextInt()) {
+                    quantidade = scanner.nextInt();
+                    break;
+                } else {
+                    System.out.println("Erro: Por favor, insira um número válido.");
+                    scanner.next();
+                }
+            }
             produtoEscolhido.setQuantidade(quantidade);
             produtosEscolhidos.add(produtoEscolhido);
 
-            // Perguntar se deseja adicionar mais produtos
-            System.out.print("= Deseja adicionar mais produtos? (s/n): ");
-            String resposta = scanner.next();
-            adicionarMaisProdutos = resposta.equalsIgnoreCase("s");
+            String resposta;
+            while (true) {
+                System.out.print("= Deseja adicionar mais produtos? (s/n): ");
+                resposta = scanner.next().trim().toLowerCase();
+
+                if (resposta.equals("s")) {
+                    adicionarMaisProdutos = true;
+                    break;
+                } else if (resposta.equals("n")) {
+                    adicionarMaisProdutos = false;
+                    break;
+                } else {
+                    System.out.println("Resposta inválida. Por favor, insira 's' para sim ou 'n' para não.");
+                }
+            }
         }
 
         // Criar a fatura
@@ -608,13 +675,19 @@ public class POOFS {
                     + faturas.get(i).getCliente().getNome() + " | Data: " + faturas.get(i).getData());
         }
 
-        // Escolher uma fatura para editar
         int faturaIndex = -1;
         while (faturaIndex < 0 || faturaIndex >= faturas.size()) {
-            System.out.print("= Escolha o número correspondente à fatura: ");
-            faturaIndex = scanner.nextInt() - 1; // Converte de 1-based para 0-based
-            if (faturaIndex < 0 || faturaIndex >= faturas.size()) {
-                System.out.println("Opção inválida. Tente novamente.");
+            System.out.print("= Escolha o número correspondente ao produto: ");
+
+            if (scanner.hasNextInt()) {
+                faturaIndex = scanner.nextInt() - 1;
+
+                if (faturaIndex < 0 || faturaIndex >= faturas.size()) {
+                    System.out.println("Opção inválida. Tente novamente.");
+                }
+            } else {
+                System.out.println("Erro: Por favor, insira um número válido.");
+                scanner.next(); // Descarta a entrada inválida
             }
         }
         Fatura faturaEscolhida = faturas.get(faturaIndex);
@@ -622,7 +695,11 @@ public class POOFS {
         // Alterar o cliente
         System.out.println("\n= Cliente atual: " + faturaEscolhida.getCliente().getNome());
         System.out.println("= Deseja alterar o cliente desta fatura? (s/n): ");
-        String alterarCliente = scanner.next();
+        String alterarCliente = scanner.next().trim().toLowerCase();
+        while (!alterarCliente.equals("s") && !alterarCliente.equals("n")) {
+            System.out.println("Resposta inválida. Por favor, insira 's' para sim ou 'n' para não.");
+            alterarCliente = scanner.next().trim().toLowerCase();  // Continuar pedindo até ser válido
+        }
         if (alterarCliente.equalsIgnoreCase("s")) {
             System.out.println("= Escolha o novo cliente ou crie um novo:");
             for (int i = 0; i < clientes.size(); i++) {
@@ -651,7 +728,11 @@ public class POOFS {
         // Alterar a data
         System.out.println("= Data atual: " + faturaEscolhida.getData());
         System.out.println("= Deseja alterar a data? (s/n): ");
-        String alterarData = scanner.next();
+        String alterarData = scanner.next().trim().toLowerCase();
+        while (!alterarData.equals("s") && !alterarData.equals("n")) {
+            System.out.println("Resposta inválida. Por favor, insira 's' para sim ou 'n' para não.");
+            alterarData = scanner.next().trim().toLowerCase();  // Continuar pedindo até ser válido
+        }
         if (alterarData.equalsIgnoreCase("s")) {
             System.out.print("= Insira a nova data (yyyy-MM-dd): ");
             String novaData = scanner.next();
@@ -665,6 +746,10 @@ public class POOFS {
         }
         System.out.println("\n= Deseja alterar os produtos?(s/n) Se quiser alterar, a lista de produtos atual é removida!");
         String alterarProdutos = scanner.next();
+        while (!alterarProdutos.equals("s") && !alterarProdutos.equals("n")) {
+            System.out.println("Resposta inválida. Por favor, insira 's' para sim ou 'n' para não.");
+            alterarProdutos = scanner.next().trim().toLowerCase();  // Continuar pedindo até ser válido
+        }
         if (alterarProdutos.equalsIgnoreCase("s")) {
             ArrayList<Produto> novosProdutos = new ArrayList<>();
             boolean adicionarMaisProdutos = true;
