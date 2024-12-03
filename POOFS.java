@@ -3,17 +3,20 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.*;
 
 public class POOFS {
     public static void main(String[] args) {
         // Nome do arquivo que contém os dados
-        String nomeFicheiro = "src/ficheiro.txt";
+        String nomeFicheiroTexto = "ficheiro.txt";
+        String nomeFicheiroObjetos = "ficheiroObjetos.obj";
 
         // Ler o arquivo
-        Ficheiro ficheiro = new Ficheiro(nomeFicheiro);
+        //Ficheiro ficheiro = new Ficheiro(nomeFicheiroTexto);
 
         // Listas para armazenar os objetos criados
         ArrayList<Cliente> clientes = new ArrayList<>();
@@ -21,9 +24,16 @@ public class POOFS {
         ArrayList<Produto> produtos = new ArrayList<>();
 
         // Processar o conteúdo do ficheiro
-        lerFicheiroTexto(ficheiro, clientes, faturas, produtos,0);//0-> ler o ficheiro.txt, 1->ler as faturas extra
+        //lerFicheiroTexto(ficheiro, clientes, faturas, produtos,0);//0-> ler o ficheiro.txt, 1->ler as faturas extra
+        // Carregar dados
+        Object[] dadosCarregados = carregarDados(clientes, faturas, produtos, nomeFicheiroObjetos, nomeFicheiroTexto);
+        clientes = (ArrayList<Cliente>) dadosCarregados[0];
+        faturas = (ArrayList<Fatura>) dadosCarregados[1];
+        produtos = (ArrayList<Produto>) dadosCarregados[2];
 
         menuSistema(clientes, faturas, produtos);
+
+        guardarDados(clientes, faturas, produtos, nomeFicheiroObjetos);
     }
 
 
@@ -44,7 +54,7 @@ public class POOFS {
             System.out.println("9. Exportar Faturas");
             System.out.println("10. Estatísticas");
             System.out.println("11. Sair");
-            System.out.print("= Escolha uma opção: ");
+            System.out.print("\nEscolha uma opção: ");
 
             int opcao;
             try {
@@ -80,9 +90,8 @@ public class POOFS {
                     visualizarFatura(faturas);
                     break;
                 case 8:
-                    Ficheiro ficheiro1 = new Ficheiro("src/faturasExtra.txt");
-                    lerFicheiroTexto(ficheiro1, clientes, faturas, produtos,1);
-                    listarFaturas(clientes,faturas);
+                    Ficheiro ficheiro1 = new Ficheiro("faturasExtra.txt");
+                    lerFicheiroTexto(ficheiro1, clientes, faturas, produtos,1);//0-> ler o ficheiro.txt, 1->ler as faturas extra
                     break;
                 case 9:
                     criarFicheiroDeTexto(faturas);
@@ -102,7 +111,7 @@ public class POOFS {
 
         scanner.close();
     }
-    private static void lerFicheiroTexto(Ficheiro ficheiro, ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos, int type) {
+    private static void lerFicheiroTexto(Ficheiro ficheiro, ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos, int type) {//0-> ler o ficheiro.txt, 1->ler as faturas extra
         // Processar as linhas lidas
         for (String linha : ficheiro.linhas) {
             String[] parts = linha.split("\\|"); // Dividir a linha pelo separador "|"
@@ -155,13 +164,24 @@ public class POOFS {
                         break;
                 }
             }
-            else if(type == 1) {
+            else if (type == 1) {
                 System.out.println();
+
+                // Verificar se a linha possui pelo menos os campos mínimos necessários
+                if (parts.length < 3) { // Contribuinte, Data, e pelo menos 1 produto
+                    System.out.println("Linha inválida ou incompleta: " + linha);
+                    continue; // Pular para a próxima linha
+                }
+
                 // Obter o número de contribuinte (cliente)
                 String contribuinte = parts[0];
-                Cliente cliente = null;
+                if (contribuinte.isEmpty()) {
+                    System.out.println("Contribuinte vazio na linha: " + linha);
+                    continue;
+                }
 
                 // Encontrar o cliente correspondente pelo contribuinte
+                Cliente cliente = null;
                 for (Cliente cliente1 : clientes) {
                     if (cliente1.getContribuinte().equals(contribuinte)) {
                         cliente = cliente1;
@@ -175,8 +195,22 @@ public class POOFS {
                     continue;
                 }
 
+
                 // Obter a data
                 String data = parts[1];
+                if (data.isEmpty()) {
+                    System.out.println("Data vazia na linha: " + linha);
+                    return;
+                }
+
+                // Verificar formato da data
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                try {
+                    LocalDate.parse(data, formatter);
+                } catch (DateTimeParseException e) {
+                    System.out.println("Data inválida ou em formato incorreto na linha: " + linha);
+                    continue;
+                }
 
                 // Obter os códigos dos produtos a partir da terceira posição em diante
                 ArrayList<Produto> produtoFatura = new ArrayList<>();
@@ -190,20 +224,21 @@ public class POOFS {
                     }
                 }
 
-                // Verificar se todos os produtos foram encontrados
+                // Verificar se algum produto foi encontrado
                 if (produtoFatura.isEmpty()) {
-                    System.out.println("Nenhum produto encontrado para a linha: " + linha);
+                    System.out.println("Nenhum produto válido encontrado na linha: " + linha+ "\n");
                     continue;
                 }
 
                 // Determinar o próximo ID da fatura
-                int numeroFatura=0;
-                for(Fatura fatura : faturas) {
-                    if(fatura.getNumeroFatura()>numeroFatura){
-                        numeroFatura=fatura.getNumeroFatura();
+                int numeroFatura = 0;
+                for (Fatura fatura : faturas) {
+                    if (fatura.getNumeroFatura() > numeroFatura) {
+                        numeroFatura = fatura.getNumeroFatura();
                     }
                 }
                 numeroFatura++;
+
                 // Criar a nova fatura e adicioná-la à lista de faturas
                 Fatura novaFatura = new Fatura(numeroFatura, cliente, data, produtoFatura);
                 faturas.add(novaFatura);
@@ -231,7 +266,7 @@ public class POOFS {
 
         try {
             // Criar o objeto File
-            File ficheiro = new File("src/"+nomeFicheiro);
+            File ficheiro = new File(nomeFicheiro);
 
             // Verificar se o ficheiro já existe
             if (ficheiro.createNewFile()) {
@@ -457,9 +492,9 @@ public class POOFS {
         String nome = scanner.nextLine();
         System.out.println("= Introduza o contribuinte: ");
         String contribuinte = scanner.nextLine();
+        System.out.println("\n======== Visualizar Fatura =======");
         for(Fatura fatura : faturas){
             if(fatura.getCliente().getNome().equals(nome) && fatura.getCliente().getContribuinte().equals(contribuinte)){
-                System.out.println("\n======== Visualizar Fatura =======");
                 System.out.println("= Número da Fatura: " + fatura.getNumeroFatura());
                 System.out.println("= Cliente: " + fatura.getCliente().toString());
                 System.out.println("= Dados dos produtos presentes:");
@@ -471,10 +506,10 @@ public class POOFS {
                     System.out.printf("= -> Valor do IVA(€): %.2f\n", produto.calcularPrecoTotalSemIva() * (produto.calcularTaxa(fatura.getCliente().getLocalizacao())/100));//acho que nao vale a pena criar uma função para isto
                     System.out.printf("= -> Valor Total com IVA: %.2f\n", produto.calcularPrecoComIvaIndividual(fatura.getCliente().getLocalizacao()));
                 }
-                System.out.println("= Preço Total sem IVA(€): "+fatura.calcularPrecoSemIva());
+                System.out.println("\n= Preço Total sem IVA(€): "+fatura.calcularPrecoSemIva());
                 System.out.println("= Valor Total do IVA(€): "+ (fatura.calcularPrecoComIva()-fatura.calcularPrecoSemIva()));
                 System.out.println("= Preço Total com IVA(€): "+fatura.calcularPrecoComIva());
-                System.out.println("=====================================");
+                System.out.println("=====================================\n");
             }
         }
     }
@@ -689,5 +724,37 @@ public class POOFS {
         System.out.printf("= Valor Total do IVA(€): %.2f\n",valorTotalDoIVA);
         System.out.printf("= Valor Total com IVA(€): %.2f\n",valorTotalComIVA);
     }
-}
+    private static void guardarDados(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos, String nomeFicheiro) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeFicheiro))) {
+            oos.writeObject(clientes);
+            oos.writeObject(faturas);
+            oos.writeObject(produtos);
+            System.out.println("Dados guardados com sucesso!");
+        } catch (IOException e) {
+            System.err.println("Erro ao guardar os dados: " + e.getMessage());
+        }
+    }
+    public static Object[] carregarDados(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos, String nomeFicheiro, String nomeFicheiroTexto) {
+        File ficheiro = new File(nomeFicheiro);
+        if (!ficheiro.exists()) {
+            System.out.println("Nenhum ficheiro de dados encontrado. Lendo dados do ficheiro de texto...");
 
+            // Criar o objeto Ficheiro e carregar o conteúdo do ficheiro de texto
+            Ficheiro ficheiroTexto = new Ficheiro(nomeFicheiroTexto);
+            lerFicheiroTexto(ficheiroTexto, clientes, faturas, produtos, 0); // Ler dados do texto inicial
+
+            return new Object[]{clientes, faturas, produtos};
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nomeFicheiro))) {
+            clientes = (ArrayList<Cliente>) ois.readObject();
+            faturas = (ArrayList<Fatura>) ois.readObject();
+            produtos = (ArrayList<Produto>) ois.readObject();
+            System.out.println("Dados carregados com sucesso!");
+            return new Object[]{clientes, faturas, produtos};
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Erro ao carregar os dados: " + e.getMessage());
+            return new Object[]{new ArrayList<Cliente>(), new ArrayList<Fatura>(), new ArrayList<Produto>()};
+        }
+    }
+}

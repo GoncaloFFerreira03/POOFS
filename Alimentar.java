@@ -78,7 +78,7 @@ public class Alimentar extends Produto {
 
     public int calcularTaxa(String local){
         int taxaTotal = 0;
-        if(local.equals("Portugal"))   {
+        if(local.equals("Portugal Continental"))   {
             if(this.tipoDeTaxa.equals("reduzida")){
                 taxaTotal = 6;
             }else if(this.tipoDeTaxa.equals("intermédia")) {

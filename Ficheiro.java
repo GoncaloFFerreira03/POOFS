@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 
-class Ficheiro{
+class Ficheiro {
     /**
      * Lista que armazena as linhas lidas do arquivo
      */
