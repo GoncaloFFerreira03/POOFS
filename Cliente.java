@@ -1,10 +1,28 @@
 import java.io.Serializable;
 
+/**
+ * Classe Cliente que representa cada Cliente
+ */
 public class Cliente implements Serializable {
+    /**
+     * nome do cliente
+     */
     private String nome;
+    /**
+     * contribuinte do cliente
+     */
     private String contribuinte;
+    /**
+     * localizacao do cliente
+     */
     private String localizacao;
 
+    /**
+     * Construtor da classe Cliente que me permite armazenar os dados de cada cliente
+     * @param nome
+     * @param contribuinte
+     * @param localizacao
+     */
     public Cliente(String nome, String contribuinte, String localizacao) {
         this.nome = nome;
         this.contribuinte = contribuinte;
@@ -35,6 +53,10 @@ public class Cliente implements Serializable {
         this.localizacao = localizacao;
     }
 
+    /**
+     * Retorna uma string com o nome do cliente, o contribuinte e a localizacao do cliente
+     * @return String
+     */
     @Override
     public String toString() {
         return "Nome:'" + nome + '\'' +

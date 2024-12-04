@@ -1,10 +1,25 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ * Classe Intermedia que representa os produtos alimentares de taxa intermedia
+ */
 public class Intermedia extends Alimentar{
+    /**
+     * categoria que me permite saber o tipo de alimento dentro da taxa intermedia
+     */
     private String categoria;
 
+    /**
+     * Construtor da classe Intermedia que permite armazenar todas as informções dos produtos alimentares de taxa intermédia
+     * @param codigo
+     * @param nome
+     * @param descricao
+     * @param precoSemIva
+     * @param quantidade
+     * @param biologico
+     * @param categoria
+     */
     public Intermedia(String codigo, String nome, String descricao, double precoSemIva, int quantidade, boolean biologico, String categoria) {
         super(codigo, nome, descricao, precoSemIva, quantidade, biologico);
         this.categoria = categoria;
@@ -18,6 +33,10 @@ public class Intermedia extends Alimentar{
         this.categoria = categoria;
     }
 
+    /**
+     * método que verifica se o produto é da categoria de vinho pois se for tem um agravamento da taxa
+     * @return taxaExtra
+     */
     public double calcularTaxaExtra(){
         int taxaExtra = 0;
         if (categoria.toLowerCase().equals("vinho")){
@@ -26,6 +45,11 @@ public class Intermedia extends Alimentar{
         return taxaExtra;
     }
 
+    /**
+     * método que calcula a taxa de cada produto com base na localização do cliente
+     * @param local
+     * @return taxaTotal
+     */
     public double calcularTaxaProduto(String local){
         double taxaTotal = 0;
 
@@ -38,8 +62,6 @@ public class Intermedia extends Alimentar{
         else if(local.equals("Acores")){
             taxaTotal = 9;
         }
-
-        taxaTotal += calcularTaxaExtra();
 
         return taxaTotal;
     }
