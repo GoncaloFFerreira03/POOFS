@@ -25,7 +25,6 @@ abstract class Produto implements Serializable {
      * preco sem Iva de cada produto
      */
     private double precoSemIVA;
-    private int taxaTotal;//o valor só via ser atribuído na classe das faturas
 
     /**
      * Construtor da classe Produto que vai servir para armazenar os dados de cada produto
@@ -89,7 +88,7 @@ abstract class Produto implements Serializable {
      * @return o preco do produto
      */
     public double calcularPrecoComIvaIndividual(String localizacao){
-        double precoProduto = calcularPrecoTotalSemIva() * (1 + (double) calcularTaxa(localizacao)/100);
+        double precoProduto = calcularPrecoTotalSemIva() * (1 + calcularTaxa(localizacao)/100);
         return precoProduto;
     }
 

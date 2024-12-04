@@ -69,17 +69,8 @@ public class Fatura  implements Serializable {
         this.produtos = produtos;
     }
 
-
-    public double calcularTaxaImpostoTotal(){
-        double taxaTotal=0;
-        for (Produto produto : produtos) {
-            taxaTotal += produto.calcularTaxa(cliente.getLocalizacao());
-        }
-        return taxaTotal;
-    }
-
     /**
-     * método que faz o cálcula do preço da fatura sem iva
+     * método que faz o cálcula do preço total da fatura sem iva
      * @return precoTotal
      */
     public double calcularPrecoSemIva(){

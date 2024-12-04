@@ -3,8 +3,8 @@ Cliente|Maria Costa|987654321|Madeira
 Cliente|Pedro Sousa|192837465|Acores
 ProdutoF|P001|Paracetamol|Medicamento para febre e dor|1|2.5|Rui Oliveira
 ProdutoF|P002|Ibuprofeno|Anti-inflamatório|1|3.0|bebés
-ProdutoA|P003|Salsicha|Sabor original|1|0.5|true|Enlatado
-ProdutoA|P004|Pão|Alimento básico|1|1.0|false|77ISO22000|FSSC22000|HACCP
+ProdutoA|P003|Salsicha|Sabor original|1|2|true|Enlatado
+ProdutoA|P004|Pão|Alimento básico|1|0.5|false|ISO22000|FSSC22000|HACCP
 Fatura|1|123456789|2024-11-01|P001
 Fatura|2|123456789|2024-11-15|P002
 Fatura|3|987654321|2024-11-20|P003

@@ -32,8 +32,13 @@ abstract class Farmacia extends Produto {
 
     public abstract double calcularTaxaExtra();
 
-    //este é o metodo final
+    /**
+     * método que faz o cálculo da taxa a pagar tendo em consideração apenas as taxas associdas ao produto
+     * @param local
+     * @return taxaTotal
+     */
     public double calcularTaxa(String local){//fazer dois metodos abstratos, o de calcular a taca normal e o da taxa extra
-        return calcularTaxaProduto(local) + calcularTaxaExtra();
+        double taxaProduto = calcularTaxaProduto(local) + calcularTaxaExtra();
+        return taxaProduto;
     }
 }

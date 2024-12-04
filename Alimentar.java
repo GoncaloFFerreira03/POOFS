@@ -34,7 +34,7 @@ abstract class Alimentar extends Produto {
     }
 
     /**
-     * método abstrato que permite o cálculo da taxa a pagar de cada produto alimentar que dependendo das subcalsses(Reduzida,Intermedia,Normal) e das localização do cliente têm preços diferentes dentro dessas mesmas subclasses
+     * método abstrato que permite o cálculo da taxa a pagar de cada produto alimentar que dependendo das subcalsses(Reduzida,Intermedia,Normal) e das localização do cliente têm valores diferentes.
      * @param local
      * @return
      */
@@ -55,7 +55,7 @@ abstract class Alimentar extends Produto {
     public double calcularTaxa(String local) {
         double taxaTotal = 0;
         if(biologico)
-            taxaTotal = (calcularTaxaProduto(local) + calcularTaxaExtra()) * 0.9;
+            taxaTotal = ( calcularTaxaProduto(local) + calcularTaxaExtra() ) * 0.9;
         else
             taxaTotal = (calcularTaxaProduto(local) + calcularTaxaExtra());
         return taxaTotal;
