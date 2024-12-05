@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * classe Normal que representa os produtos alimentares de taxa normal
+ * Classe Normal que representa os produtos alimentares de taxa normal
  */
 public class Normal extends Alimentar{
     /**

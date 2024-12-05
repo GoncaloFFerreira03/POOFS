@@ -8,7 +8,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.*;
+/**
+ * @author Gonçalo Fernandes Ferreira 2022210563
+ * @author Rui Manuel Silva Oliveira 2022210616
+ * @version 1.0
+ */
 
+/**
+ * Classe principal do programa
+ */
 public class POOFS {
     public static void main(String[] args) {
         // Nome do arquivo que contém os dados
@@ -601,7 +609,7 @@ public class POOFS {
                     System.out.printf("= -> Valor do IVA(€): %.2f\n", produto.calcularPrecoTotalSemIva() * (produto.calcularTaxa(fatura.getCliente().getLocalizacao())/100));//acho que nao vale a pena criar uma função para isto
                     System.out.printf("= -> Valor Total com IVA: %.2f\n", produto.calcularPrecoComIvaIndividual(fatura.getCliente().getLocalizacao()));
                 }
-                System.out.printf("\n= Preço Total sem IVA(€): %.2f",fatura.calcularPrecoSemIva());
+                System.out.printf("\n= Preço Total sem IVA(€): %.2f\n",fatura.calcularPrecoSemIva());
                 System.out.printf("= Valor Total do IVA(€): %.2f\n",(fatura.calcularPrecoComIva()-fatura.calcularPrecoSemIva()));
                 System.out.printf("= Preço Total com IVA(€): %.2f\n",fatura.calcularPrecoComIva());
                 System.out.println("=====================================\n");
@@ -696,7 +704,6 @@ public class POOFS {
                     scanner.next(); // Descarta a entrada inválida
                 }
             }
-            produtosEscolhidos.add(produtos.get(produtoIndex));
             Produto produtoEscolhido = produtos.get(produtoIndex);
             int quantidade;
             while (true) {
@@ -785,8 +792,7 @@ public class POOFS {
         System.out.printf("= Preço Total: %.2f€\n", novaFatura.calcularPrecoComIva());
         System.out.println("= Produtos na fatura:");
         for (Produto produto : produtosEscolhidos) {
-            System.out.println("= -> " + produto.getNome()); // Assumindo que Produto tem o método getNome()
-            System.out.println("= -> " + produto.getNome()+ " ("+ produto.getQuantidade() +")"); // Assumindo que Produto tem o método getNome()
+            System.out.println("= -> " + produto.getNome()+ " ("+ produto.getQuantidade() +")");
         }
     }
 
@@ -873,7 +879,7 @@ public class POOFS {
         // Alterar os produtos
         System.out.println("\n= Produtos atuais na fatura:");
         for (Produto produto : faturaEscolhida.getProdutos()) {
-            System.out.println("= -> " + produto.getNome());
+            System.out.println("= -> " + produto.getNome() +" ("+ produto.getQuantidade() + ")");
         }
         System.out.println("\n= Deseja alterar os produtos?(s/n) Se quiser alterar, a lista de produtos atual é removida!");
         String alterarProdutos = scanner.next();
@@ -899,7 +905,22 @@ public class POOFS {
                         System.out.println("Opção inválida. Tente novamente.");
                     }
                 }
-                novosProdutos.add(produtos.get(produtoIndex));
+
+                Produto produtoEscolhido = produtos.get(produtoIndex);
+                int quantidade;
+                while (true) {
+                    System.out.println("= Quantidade: ");
+
+                    if (scanner.hasNextInt()) {
+                        quantidade = scanner.nextInt();
+                        break;
+                    } else {
+                        System.out.println("Erro: Por favor, insira um número válido.");
+                        scanner.next();
+                    }
+                }
+                produtoEscolhido.setQuantidade(quantidade);
+                novosProdutos.add(produtoEscolhido);
 
                 // Perguntar se deseja adicionar mais produtos
                 System.out.print("= Deseja adicionar mais produtos? (s/n): ");
@@ -918,7 +939,7 @@ public class POOFS {
         System.out.printf("-> Preço Total: %.2f€\n", faturaEscolhida.calcularPrecoComIva());
         System.out.println("-> Produtos na fatura:");
         for (Produto produto : faturaEscolhida.getProdutos()) {
-            System.out.println("- " + produto.getNome());
+            System.out.println("- " + produto.getNome()+ " ("+ produto.getQuantidade() +")");
         }
     }
 
