@@ -42,12 +42,14 @@ public class Simples extends Farmacia{
     }
 
     /**
-     * método que retorna sempre o mesmo valor pois os produtos farmaceuticos simples têm sempre a mesma taxa
+     * método que retorna a taxa dos prudotos farmceuticos com prescição
      * @param local
      * @return taxaTotal
      */
-    public double calcularTaxaProduto(String local) {//taxa é igual para todos
+    public double calcularTaxa(String local){
         double taxaTotal = 23;
-        return taxaTotal;
+        double taxaProduto = taxaTotal + calcularTaxaExtra();
+
+        return taxaProduto;
     }
 }

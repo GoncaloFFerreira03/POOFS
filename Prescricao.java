@@ -34,12 +34,13 @@ public class Prescricao extends Farmacia{
     }
 
     /**
-     * método que me permite calcular a taxa de cada produto pois a mesma varia de região para região
+     * método que faz o cálculo da taxa a pagar tendo em consideração apenas as taxas associdas ao produto
      * @param local
-     * @return taxa total
+     * @return taxaTotal
      */
-    public double calcularTaxaProduto(String local) {//vai ser abstrato
+    public double calcularTaxa(String local){
         double taxaTotal = 0;
+
         if(local.equals("Portugal Continental"))   {
             taxaTotal = 6;
         }
@@ -49,7 +50,9 @@ public class Prescricao extends Farmacia{
         else if(local.equals("Acores")){
             taxaTotal = 4;
         }
+
+        taxaTotal += calcularTaxaExtra();
+
         return taxaTotal;
     }
-
 }

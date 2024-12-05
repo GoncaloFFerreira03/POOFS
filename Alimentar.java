@@ -34,30 +34,8 @@ abstract class Alimentar extends Produto {
     }
 
     /**
-     * método abstrato que permite o cálculo da taxa a pagar de cada produto alimentar que dependendo das subcalsses(Reduzida,Intermedia,Normal) e das localização do cliente têm valores diferentes.
-     * @param local
+     * Método para calcular a taxa extra
      * @return
      */
-    public abstract double calcularTaxaProduto(String local);
-
-    /**
-     * Método abstrato que me permite calcular a taxaExtra de cada produto que esteja  contido numa subclasse desta classe
-     * @return
-     */
-
     public abstract double calcularTaxaExtra();
-
-    /**
-     * método que faz o cálculo da taxa a pagar conforme a localidade do cliente, se o produto for biológico ou não e se este produto pertence a alguma categoria especial para ter uma benefício de taxa extra
-     * @param local
-     * @return taxaTotal
-     */
-    public double calcularTaxa(String local) {
-        double taxaTotal = 0;
-        if(biologico)
-            taxaTotal = ( calcularTaxaProduto(local) + calcularTaxaExtra() ) * 0.9;
-        else
-            taxaTotal = (calcularTaxaProduto(local) + calcularTaxaExtra());
-        return taxaTotal;
-    }
 }

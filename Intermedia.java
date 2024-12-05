@@ -34,7 +34,7 @@ public class Intermedia extends Alimentar{
     }
 
     /**
-     * método que verifica se o produto é da categoria de vinho pois se for tem um agravamento da taxa
+     * método que verifica se o produto é da categoria de vinho pois, se for tem um agravamento da taxa
      * @return taxaExtra
      */
     public double calcularTaxaExtra(){
@@ -50,7 +50,7 @@ public class Intermedia extends Alimentar{
      * @param local
      * @return taxaTotal
      */
-    public double calcularTaxaProduto(String local){
+    public double calcularTaxa(String local){
         double taxaTotal = 0;
 
         if(local.equals("Portugal Continental"))   {
@@ -62,6 +62,9 @@ public class Intermedia extends Alimentar{
         else if(local.equals("Acores")){
             taxaTotal = 9;
         }
+
+        if(isBiologico())
+            taxaTotal += taxaTotal * 0.9;
 
         return taxaTotal;
     }

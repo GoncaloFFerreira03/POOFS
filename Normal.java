@@ -32,7 +32,7 @@ public class Normal extends Alimentar{
      * @param local
      * @return taxaTotal
      */
-    public double calcularTaxaProduto(String local){
+    public double calcularTaxa(String local){
         double taxaTotal = 0;
 
         if(local.equals("Portugal Continental"))   {
@@ -45,6 +45,11 @@ public class Normal extends Alimentar{
             taxaTotal = 16;
         }
 
+        if(isBiologico())
+            taxaTotal = taxaTotal * 0.9;
+
         return taxaTotal;
     }
+
+
 }

@@ -48,11 +48,12 @@ public class Reduzida extends Alimentar{
     }
 
     /**
-     * Método que faz o o cálculo da taza de um produto com base no local onde é o cliente e com base na taxaExtra calculada anteriormente
+     * Método que faz o o cálculo da taxa de um produto com base no local onde é o cliente e com base na taxaExtra calculada anteriormente
      * @param local
      * @return taxaTotal
      */
-    public double calcularTaxaProduto(String local){
+
+    public double calcularTaxa(String local){
         double taxaTotal = 0;
 
         if(local.equals("Portugal Continental"))   {
@@ -64,6 +65,10 @@ public class Reduzida extends Alimentar{
         else if(local.equals("Acores")){
             taxaTotal = 4;
         }
+        taxaTotal += calcularTaxaExtra();
+
+        if(isBiologico())
+            taxaTotal = taxaTotal * 0.9;
 
         return taxaTotal;
     }
