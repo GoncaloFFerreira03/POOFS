@@ -33,9 +33,4 @@ abstract class Alimentar extends Produto {
         this.biologico = biologico;
     }
 
-    /**
-     * Método para calcular a taxa extra
-     * @return
-     */
-    public abstract double calcularTaxaExtra();
 }

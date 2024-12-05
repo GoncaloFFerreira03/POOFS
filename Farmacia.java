@@ -18,10 +18,4 @@ abstract class Farmacia extends Produto {
         super(codigo, nome, descricao, precoSemIva, quantidade);
     }
 
-
-    /**
-     * método abstrato que vai permitir fazer o calculo da taxa extra a pagar tendo em conta a subclasse de cada produto
-     * @return
-     */
-    public abstract double calcularTaxaExtra();
 }

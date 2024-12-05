@@ -108,4 +108,10 @@ abstract class Produto implements Serializable {
         precoTotal = precoSemIVA*quantidade;
         return precoTotal;
     }
+
+    /**
+     * Método para calcular a taxa extra
+     * @return
+     */
+    public abstract double calcularTaxaExtra();
 }
