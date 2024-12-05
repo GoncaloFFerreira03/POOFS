@@ -36,7 +36,12 @@ public class POOFS {
         guardarDados(clientes, faturas, produtos, nomeFicheiroObjetos);
     }
 
-
+    /**
+     * método que inicializa o menu que é mostrado ao utilizador e o permite escolher qual das tarefas pretende executar
+     * @param clientes
+     * @param faturas
+     * @param produtos
+     */
     private static void menuSistema( ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
         Scanner scanner = new Scanner(System.in);
         boolean continuar = true;
@@ -69,10 +74,10 @@ public class POOFS {
 
             switch (opcao) {
                 case 1:
-                    registar(clientes);
+                    criarCliente(clientes);
                     break;
                 case 2:
-                    editar(clientes, faturas, produtos);
+                    editarCliente(clientes, faturas, produtos);
                     break;
                 case 3:
                     listarClientes(clientes);
@@ -111,6 +116,15 @@ public class POOFS {
 
         scanner.close();
     }
+
+    /**
+     * Se o type for igual a 0 o método lê as linhas do ficheiro e insere o conteudo das linhas lidas no array de classe correspondente. Caso o type seja igual a 1 vai ler as linhas do ficheiro da opção de importar faturas
+     * @param ficheiro
+     * @param clientes
+     * @param faturas
+     * @param produtos
+     * @param type
+     */
     private static void lerFicheiroTexto(Ficheiro ficheiro, ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos, int type) {//0-> ler o ficheiro.txt, 1->ler as faturas extra
         // Processar as linhas lidas
         for (String linha : ficheiro.linhas) {
@@ -291,6 +305,10 @@ public class POOFS {
         }
     }
 
+    /**
+     * Cria um ficheiro de texto, se o mesmo não existir, para armazenar o conteudo das faturas
+     * @param faturasss
+     */
     private static void criarFicheiroDeTexto(ArrayList<Fatura> faturasss){
         Scanner scanner = new Scanner(System.in);
 
@@ -350,7 +368,12 @@ public class POOFS {
         }
     }
 
-    private static Cliente registar( ArrayList<Cliente> clientes) {
+    /**
+     * método que permite a criação de um novo cliente
+     * @param clientes
+     * @return
+     */
+    private static Cliente criarCliente( ArrayList<Cliente> clientes) {
         Scanner scanner = new Scanner(System.in);
         String nome;
         boolean nomeValido = true;
@@ -424,7 +447,14 @@ public class POOFS {
 
         return cliente;
     }
-    private static void editar( ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
+
+    /**
+     * método que permite ao Cliente editar os seus próprios dados
+     * @param clientes
+     * @param faturas
+     * @param produtos
+     */
+    private static void editarCliente( ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\n= Introduza o seu nome: ");
         String nome = scanner.nextLine();
@@ -533,6 +563,11 @@ public class POOFS {
         }
     }
 
+    /**
+     * método para listar todos os clientes pertencentes ao sistema
+     * @param clientes
+     */
+
     private static void listarClientes( ArrayList<Cliente> clientes) {
         System.out.println("==== Todos os clientes pertencentes ao sistema: ====");
         for (Cliente c : clientes) {
@@ -541,31 +576,10 @@ public class POOFS {
         }
     }
 
-    private static void listarFaturas( ArrayList<Cliente> clientes,ArrayList<Fatura> faturas) {
-        System.out.println("==== Os dados de todas as faturas: =====\n");
-        for (Fatura fatura : faturas) {
-            Cliente cliente = fatura.getCliente();
-
-
-            // Obtém a lista de produtos da fatura
-            ArrayList<Produto> produtosFatura = fatura.getProdutos();
-
-
-            // Exibe as informações da fatura
-            System.out.printf("= Fatura Número: %d, "
-                            + "cliente: %s, "
-                            + "localização: %s, "
-                            + "número de Produtos: %d, "
-                            + "valor Total Sem IVA: %.2f, "
-                            + "valor Total com IVA: %.2f\n",
-                    fatura.getNumeroFatura(),
-                    cliente.getNome(),
-                    cliente.getLocalizacao(),
-                    produtosFatura.size(),
-                    fatura.calcularPrecoSemIva(),
-                    fatura.calcularPrecoComIva());
-        }
-    }
+    /**
+     * método que me permite visualizar os detalhes de cada fatura de um respetivo cliente
+     * @param faturas
+     */
     private static void visualizarFatura( ArrayList<Fatura> faturas) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("==== Para visualizar a fatura de um cliente, precisa de inserir os dados do mesmo! ====");
@@ -594,6 +608,43 @@ public class POOFS {
             }
         }
     }
+    /**
+     * método para listar todas as faturas pertencentes ao sistema
+     * @param clientes
+     * @param faturas
+     */
+    private static void listarFaturas( ArrayList<Cliente> clientes,ArrayList<Fatura> faturas) {
+        System.out.println("==== Os dados de todas as faturas: =====\n");
+        for (Fatura fatura : faturas) {
+            Cliente cliente = fatura.getCliente();
+
+
+            // Obtém a lista de produtos da fatura
+            ArrayList<Produto> produtosFatura = fatura.getProdutos();
+
+
+            // Exibe as informações da fatura
+            System.out.printf("= Fatura Número: %d, "
+                            + "cliente: %s, "
+                            + "localização: %s, "
+                            + "número de Produtos: %d, "
+                            + "valor Total Sem IVA: %.2f, "
+                            + "valor Total com IVA: %.2f\n",
+                    fatura.getNumeroFatura(),
+                    cliente.getNome(),
+                    cliente.getLocalizacao(),
+                    produtosFatura.size(),
+                    fatura.calcularPrecoSemIva(),
+                    fatura.calcularPrecoComIva());
+        }
+    }
+
+    /**
+     * método que permite a criação de uma nova fatura
+     * @param clientes
+     * @param faturas
+     * @param produtos
+     */
     private static void criarFaturas(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
         Scanner scanner = new Scanner(System.in);
 
@@ -616,7 +667,7 @@ public class POOFS {
 
         Cliente clienteEscolhido;
         if (clienteIndex == -1) { // Criar novo cliente
-            clienteEscolhido = registar(clientes); // Método para registrar um cliente
+            clienteEscolhido = criarCliente(clientes); // Método para registrar um cliente
         } else {
             clienteEscolhido = clientes.get(clienteIndex);
         }
@@ -738,6 +789,13 @@ public class POOFS {
             System.out.println("= -> " + produto.getNome()+ " ("+ produto.getQuantidade() +")"); // Assumindo que Produto tem o método getNome()
         }
     }
+
+    /**
+     * método que permite editar os dados de uma determinada fatura
+     * @param clientes
+     * @param faturas
+     * @param produtos
+     */
     private static void editarFatura(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos) {
         Scanner scanner = new Scanner(System.in);
 
@@ -791,7 +849,7 @@ public class POOFS {
             }
 
             if (clienteIndex == -1) { // Opção para criar um novo cliente
-                Cliente novoCliente = registar(clientes);
+                Cliente novoCliente = criarCliente(clientes);
                 faturaEscolhida.setCliente(novoCliente);
             } else {
                 faturaEscolhida.setCliente(clientes.get(clienteIndex));
@@ -864,6 +922,11 @@ public class POOFS {
         }
     }
 
+    /**
+     * método que mostra as estatisticas das faturas
+     * @param faturas
+     * @param produtos
+     */
     private static void mostrarEstatisticas(ArrayList<Fatura> faturas, ArrayList<Produto> produtos){
         int numFaturas = faturas.size();
         int numProdutos = produtos.size();
@@ -882,6 +945,14 @@ public class POOFS {
         System.out.printf("= Valor Total do IVA(€): %.2f\n",valorTotalDoIVA);
         System.out.printf("= Valor Total com IVA(€): %.2f\n",valorTotalComIVA);
     }
+
+    /**
+     * método que guarda todos os dados necessários no ficheiro de objetos
+     * @param clientes
+     * @param faturas
+     * @param produtos
+     * @param nomeFicheiro
+     */
     private static void guardarDados(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos, String nomeFicheiro) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeFicheiro))) {
             oos.writeObject(clientes);
@@ -892,6 +963,16 @@ public class POOFS {
             System.err.println("Erro ao guardar os dados: " + e.getMessage());
         }
     }
+
+    /**
+     * método que carrega todos os dados dos ficheiros de objetos, caso este ficheiro nao exista carrega esses mesmos dados do ficheiro.txt
+     * @param clientes
+     * @param faturas
+     * @param produtos
+     * @param nomeFicheiro
+     * @param nomeFicheiroTexto
+     * @return
+     */
     public static Object[] carregarDados(ArrayList<Cliente> clientes, ArrayList<Fatura> faturas, ArrayList<Produto> produtos, String nomeFicheiro, String nomeFicheiroTexto) {
         File ficheiro = new File(nomeFicheiro);
         if (!ficheiro.exists()) {
